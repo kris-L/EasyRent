@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#00000000"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dip"
+        android:layout_marginBottom="20dip"
+        >
+
+        <LinearLayout
+            android:id="@+id/easy_rent_ll"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="15dip"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/shape_circle_orange"
+            >
+
+            <ImageView
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:src="@drawable/icon_tab_home_pre"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="易租"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/easy_life_ll"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/easy_rent_ll"
+            android:background="@drawable/shape_circle_orange"
+            >
+
+            <ImageView
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:src="@drawable/icon_tab_family_pre"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="易生活"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="16dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/pop_rl_click"
+        android:layout_width="wrap_content"
+        android:layout_height="55dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="45dip"
+            android:layout_height="45dip"
+            android:layout_centerInParent="true"
+            android:src="@drawable/bg"/>
+
+        <ImageView
+            android:id="@+id/pop_iv_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/add"/>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -6,6 +6,7 @@ buildscript {
         google()
         jcenter()
     }
+    apply from: 'config.gradle'
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         
@@ -19,9 +20,23 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'http://118.178.228.199:8081/nexus/content/repositories/xw/' }
+        maven { url "https://jitpack.io" }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+//解决支持库版本冲突
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion depsVersion.support
+            }
+        }
+    }
 }

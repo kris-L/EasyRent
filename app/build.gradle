@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.rent.kris.easyrent"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // EventBus
     implementation 'org.greenrobot:eventbus:3.0.0'
+    compile project(path: ':lib-dialog')
+    implementation rootProject.ext.deps.retrofit
 }
