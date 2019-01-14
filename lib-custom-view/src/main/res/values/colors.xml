@@ -12,6 +12,7 @@
     <color name="gray_ee">#eeeeee</color>
     <color name="transparent">#00000000</color>
 
+    <color name="orange_bg">#EB952D</color>
     <color name="banner_bg">#dc4391e1</color>
     <color name="banner_text_color">#F7F7F7</color>
     <color name="blue">#dc4391e1</color>

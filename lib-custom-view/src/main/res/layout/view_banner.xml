@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/banner_bg">
+    android:background="@color/orange_bg">
 
     <TextView
         android:id="@+id/tv_title"
