@@ -34,21 +34,100 @@
         android:textSize="16sp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
         android:orientation="horizontal"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
             android:text="+86"
             android:textColor="@color/gray_66"
             android:textSize="16sp" />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:hint="请输入手机号码"
+            android:textColorHint="@color/gray_66"
+            android:textColor="@color/gray_33"
+            android:textSize="16sp"
+            android:inputType="number"
+            android:maxLength="11"
+            />
+
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:text="密码"
+        android:textColor="@color/gray_33"
+        android:textSize="16sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:hint="请输入登陆密码"
+        android:textColorHint="@color/gray_66"
+        android:textColor="@color/gray_33"
+        android:textSize="16sp"
+        />
+
+
+    <TextView
+        android:id="@+id/login_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_circular_bead_orange"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:text="忘记密码?"
+        android:textColor="@color/green_37C7B8"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/new_user_tv"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/shape_stroke_rectangle_orange"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="新用户注册"
+        android:textColor="@color/circle_orange_bg"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        />
 
 
 </LinearLayout>

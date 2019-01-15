@@ -4,7 +4,12 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+
+    <color name="orange_disable_bg">#FED5A3</color>
     <color name="circle_orange_bg">#EB952D</color>
+
+    <color name="green_37C7B8">#37C7B8</color>
+
 
     <color name="gray_33">#333333</color>
     <color name="gray_66">#666666</color>

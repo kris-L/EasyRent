@@ -16,7 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+
+    }
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -32,4 +41,8 @@ dependencies {
     compile project(path: ':lib-dialog')
     implementation project(':lib-custom-view')
     implementation rootProject.ext.deps.retrofit
+    implementation rootProject.ext.deps.glide
+    //轮播图
+    implementation 'com.youth.banner:banner:1.4.10'  //最新版本
+
 }

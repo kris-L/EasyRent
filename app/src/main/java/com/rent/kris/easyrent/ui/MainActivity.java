@@ -2,6 +2,7 @@ package com.rent.kris.easyrent.ui;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +18,8 @@ import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
 import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +49,12 @@ public class MainActivity extends BaseActivity {
     private int tabType = Constant.TYPE_TAB_EASY_HOME;
     private int selectIndex = 1;
 
+
+    public static void intentTo(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +74,6 @@ public class MainActivity extends BaseActivity {
         fouthFragment = fouthFragment.getInstance(true);
         currentFragmentTag = TAG_FRAG_FIRST;
         transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
-
 
         mBottomBar.setOnBottombarOnclick(new BottomBar.OnBottonbarClick() {
             @Override
@@ -114,10 +122,8 @@ public class MainActivity extends BaseActivity {
                         switchBottomTab();
                     }
                 });
-
             }
         });
-
     }
 
     private Fragment getCurrFragment() {
@@ -168,6 +174,5 @@ public class MainActivity extends BaseActivity {
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(fl_tab_container, "rotationY", 0f,360f);
         objectAnimator.setDuration(800);
         objectAnimator.start();
-
     }
 }

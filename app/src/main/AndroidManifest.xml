@@ -21,6 +21,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
     <application
@@ -30,13 +32,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--<activity-->
+            <!--android:name=".ui.MainActivity"-->
+            <!--android:launchMode="singleTask"-->
+            <!--android:screenOrientation="portrait" />-->
+
+        <!--LoginActivity-->
+
+
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="e5ed236d7de1c876599013cab9daed78" />
+        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+        <service android:name="com.amap.api.location.APSService" >
+        </service>
     </application>
 
 </manifest>
