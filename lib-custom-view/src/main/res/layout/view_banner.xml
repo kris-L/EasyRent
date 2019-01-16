@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/orange_bg">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tv_title"
@@ -14,7 +14,7 @@
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"
         android:lines="1"
-        android:textColor="@color/banner_text_color"
+        android:textColor="@color/black"
         android:textSize="18sp"
         tools:text="标题" />
     <!--android:layout_toEndOf="@id/lay_back"-->

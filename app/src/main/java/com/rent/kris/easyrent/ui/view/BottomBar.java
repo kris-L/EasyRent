@@ -111,15 +111,15 @@ public class BottomBar extends LinearLayout {
 
             switch (select){
                 case 1:
-                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home_pre));
+                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_merchant));
                     tab_first_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 2:
-                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family_pre));
+                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_goods));
                     tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 3:
-                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session_pre));
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_shopping_cart));
                     tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 4:

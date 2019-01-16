@@ -39,11 +39,23 @@ public class MainActivity extends BaseActivity {
     private static final String TAG_FRAG_THIRD = "app:fragment:third";
     private static final String TAG_FRAG_FOURTH = "app:fragment:fourth";
 
+    private static final String TAG_FRAG_FIFTH = "app:fragment:fifth";
+    private static final String TAG_FRAG_SIXTH = "app:fragment:sixth";
+    private static final String TAG_FRAG_SEVENTH = "app:fragment:seventh";
+    private static final String TAG_FRAG_EIGHTH = "app:fragment:eighth";
+
+
     private Context mContext;
     private FirstFragment firstFragment;
     private SecondFragment secondFragment;
     private ThirdFragment thirdFragment;
     private FouthFragment fouthFragment;
+
+    private FifthFragment fifthFragment;
+    private SixthFragment sixthFragment;
+    private SeventhFragment seventhFragment;
+    private EighthFragment eighthFragment;
+
 
     private String currentFragmentTag;
     private int tabType = Constant.TYPE_TAB_EASY_HOME;
@@ -69,9 +81,14 @@ public class MainActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         firstFragment = FirstFragment.getInstance(true);
-        secondFragment = secondFragment.getInstance(true);
-        thirdFragment = thirdFragment.getInstance(true);
-        fouthFragment = fouthFragment.getInstance(true);
+        secondFragment = SecondFragment.getInstance(true);
+        thirdFragment = ThirdFragment.getInstance(true);
+        fouthFragment = FouthFragment.getInstance(true);
+        fifthFragment = FifthFragment.getInstance(true);
+        sixthFragment = SixthFragment.getInstance(true);
+        seventhFragment = SeventhFragment.getInstance(true);
+        eighthFragment = EighthFragment.getInstance(true);
+
         currentFragmentTag = TAG_FRAG_FIRST;
         transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
 
@@ -80,28 +97,28 @@ public class MainActivity extends BaseActivity {
             public void onFirstClick() {
                 selectIndex = 1;
                 mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContentFragment(getCurrFragment(), firstFragment, TAG_FRAG_FIRST);
+                switchContent(tabType,selectIndex);
             }
 
             @Override
             public void onSecondClick() {
                 selectIndex =2;
                 mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContentFragment(getCurrFragment(), secondFragment, TAG_FRAG_SECOND);
+                switchContent(tabType,selectIndex);
             }
 
             @Override
             public void onThirdClick() {
                 selectIndex =3;
                 mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContentFragment(getCurrFragment(), thirdFragment, TAG_FRAG_THIRD);
+                switchContent(tabType,selectIndex);
             }
 
             @Override
             public void onFouthClick() {
                 selectIndex = 4;
                 mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContentFragment(getCurrFragment(), fouthFragment, TAG_FRAG_FOURTH);
+                switchContent(tabType,selectIndex);
             }
 
             @Override
@@ -113,6 +130,7 @@ public class MainActivity extends BaseActivity {
                         tabType = Constant.TYPE_TAB_EASY_HOME;
                         mBottomBar.setBottonTabView(tabType,selectIndex);
                         switchBottomTab();
+                        switchContent(tabType,selectIndex);
                     }
 
                     @Override
@@ -120,6 +138,7 @@ public class MainActivity extends BaseActivity {
                         tabType = Constant.TYPE_APP_EASY_LIFE;
                         mBottomBar.setBottonTabView(tabType,selectIndex);
                         switchBottomTab();
+                        switchContent(tabType,selectIndex);
                     }
                 });
             }
@@ -135,10 +154,55 @@ public class MainActivity extends BaseActivity {
             return thirdFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_FOURTH)) {
             return fouthFragment;
-        }else{
+        } else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_FIFTH)){
+            return fifthFragment;
+        }else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_SIXTH)){
+            return sixthFragment;
+        }else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_SEVENTH)){
+            return seventhFragment;
+        } else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_EIGHTH)){
+            return eighthFragment;
+        } else{
             return firstFragment;
         }
+
     }
+
+    private void switchContent(int tabType,int selectIndex){
+        if(tabType == Constant.TYPE_TAB_EASY_HOME){
+            switch (selectIndex){
+                case 1:
+                    switchContentFragment(getCurrFragment(), firstFragment, TAG_FRAG_FIRST);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), secondFragment, TAG_FRAG_SECOND);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), thirdFragment, TAG_FRAG_THIRD);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), fouthFragment, TAG_FRAG_FOURTH);
+                    break;
+            }
+        }else{
+            switch (selectIndex){
+                case 1:
+                    switchContentFragment(getCurrFragment(), fifthFragment, TAG_FRAG_FIFTH);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    break;
+            }
+        }
+    }
+
+
     private void switchContentFragment(Fragment from, Fragment to, String tag) {
         if (TextUtils.equals(currentFragmentTag, tag)) {
             return;

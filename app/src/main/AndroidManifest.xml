@@ -32,8 +32,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
+        <activity android:name=".ui.LoginActivity"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,15 +42,23 @@
             </intent-filter>
         </activity>
 
-        <!--<activity-->
-            <!--android:name=".ui.MainActivity"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:screenOrientation="portrait" />-->
+        <activity
+            android:name=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
-        <!--LoginActivity-->
+        <activity
+        android:name=".ui.SettingActivity"
+        android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.LandlordActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.PhoneBindingActivity"/>
+        <activity android:name=".ui.SetPasswordActivity"/>
 
 
-
+        <!--456a058f8699c8fff8496420ecdbd900-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e5ed236d7de1c876599013cab9daed78" />

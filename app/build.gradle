@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('H:/GIT/EasyRent/app/mykey/kris_key.keystore')
+            keyAlias 'kris'
+            keyPassword 'lszqq3476426'
+            storePassword 'lszqq3476426'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.rent.kris.easyrent"
@@ -14,9 +22,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
@@ -28,7 +36,7 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -43,6 +51,6 @@ dependencies {
     implementation rootProject.ext.deps.retrofit
     implementation rootProject.ext.deps.glide
     //轮播图
-    implementation 'com.youth.banner:banner:1.4.10'  //最新版本
-
+    implementation 'com.youth.banner:banner:1.4.10'
+    //最新版本
 }
