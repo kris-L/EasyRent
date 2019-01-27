@@ -1,1 +1,1 @@
-include ':app', ':lib-dialog', ':lib-custom-view'
+include ':app', ':lib-dialog', ':lib-custom-view', ':common-module'

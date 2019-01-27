@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation rootProject.ext.deps.junit
+    implementation rootProject.ext.deps.supportV4
+    implementation rootProject.ext.deps.appcompatV7
+    implementation rootProject.ext.deps.design
+    implementation rootProject.ext.deps.gson
+    implementation rootProject.ext.deps.picasso
+    implementation rootProject.ext.deps.eventbus
+    implementation rootProject.ext.deps.retrofit
+    implementation project(':lib-dialog')
+    implementation project(':lib-custom-view')
+    api rootProject.ext.deps.timber
+}
