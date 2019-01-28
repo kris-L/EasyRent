@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Utils {
@@ -81,5 +83,13 @@ public class Utils {
             Log.e(TAG, "file does not exists " + file.getAbsolutePath());
         }
     }
+
+
+    public static boolean isMobileNO(String mobiles) {
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$");
+        Matcher m = p.matcher(mobiles);
+        return m.matches();
+    }
+
 
 }

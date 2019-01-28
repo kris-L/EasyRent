@@ -56,6 +56,7 @@
             >
 
             <LinearLayout
+                android:id="@+id/my_account_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -78,6 +79,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/my_contract_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -100,6 +102,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/my_appointment_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -123,6 +126,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/my_order_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -155,7 +159,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/top_contacts_ll"
+                android:id="@+id/evaluate_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -170,6 +174,7 @@
                     android:background="@drawable/icon_user_evaluate" />
 
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -237,7 +242,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
-                android:id="@+id/drafts_ll"
+                android:id="@+id/share_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -278,6 +283,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
+                android:id="@+id/my_homepage_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -318,6 +324,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
+                android:id="@+id/attention_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -356,7 +363,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
-                android:id="@+id/user_autonym_ll"
+                android:id="@+id/user_identification_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"

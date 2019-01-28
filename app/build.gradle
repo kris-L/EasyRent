@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
     signingConfigs {
         release {
-            storeFile file('E:/javaWorkPlace/GIT/EasyRent/app/mykey/kris_key.keystore')
+            storeFile file('H:/GIT/EasyRent/app/mykey/kris_key.keystore')
             keyAlias 'kris'
             keyPassword 'lszqq3476426'
             storePassword 'lszqq3476426'
@@ -11,6 +12,7 @@ android {
     }
     compileSdkVersion 27
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.rent.kris.easyrent"
         minSdkVersion 19
         targetSdkVersion 27
@@ -53,5 +55,7 @@ dependencies {
     //轮播图
     implementation 'com.youth.banner:banner:1.4.10'
     implementation project(':common-module')
-
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
+    compile 'com.android.support:multidex:1.0.1'
 }

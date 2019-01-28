@@ -13,8 +13,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.stream.MalformedJsonException;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.api.AppModel;
+import com.rent.kris.easyrent.entity.CommonEntity;
+import com.rent.kris.easyrent.entity.UserProfile;
+import com.rent.kris.easyrent.event.EventManager;
+import com.rent.kris.easyrent.event.OnLoginEvent;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
+import com.rent.kris.easyrent.util.Utils;
+import com.rent.kris.easyrent.web.WebViewHelper;
+import com.xw.common.AppToast;
+import com.xw.ext.http.retrofit.api.NoneProgressSubscriber;
+import com.xw.ext.http.retrofit.api.error.ApiException;
+import com.xw.ext.http.retrofit.api.error.ErrorSubscriber;
 import com.xw.lib.custom.view.BannerView;
 
 import butterknife.BindView;
@@ -108,14 +120,45 @@ public class PhoneBindingActivity extends BaseActivity {
                 break;
 
             case R.id.get_verification_code_tv:
-                if(timeCount == null){
-                    timeCount = new TimeCount(60000, 1000);
-                    timeCount.start();
-                }else {
-                    timeCount.start();
+                String phoneStr = phone_et.getText().toString().trim();
+                if(Utils.isMobileNO(phoneStr)){
+                    requestCode(phoneStr);
+                    if(timeCount == null){
+                        timeCount = new TimeCount(60000, 1000);
+                        timeCount.start();
+                    }else {
+                        timeCount.start();
+                    }
+                }else{
+                    AppToast.makeText(PhoneBindingActivity.this,"请输入正确的手机号码");
                 }
                 break;
         }
+    }
+
+
+    private void requestCode(final String phoneStr) {
+        showProgressDialog("正在获取验证码…");
+        AppModel.model().getCode(phoneStr,new ErrorSubscriber<CommonEntity>() {
+            @Override
+            protected void onError(ApiException ex) {
+                if (ex.getCause() instanceof MalformedJsonException) {
+                    AppToast.makeText(PhoneBindingActivity.this, "获取验证码失败");
+                } else {
+                    AppToast.makeText(PhoneBindingActivity.this, "获取验证码失败：" + ex.message);
+                }
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onCompleted() {
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onNext(CommonEntity s) {
+            }
+        });
     }
 
 
@@ -139,9 +182,10 @@ public class PhoneBindingActivity extends BaseActivity {
             get_verification_code_tv.setText("重新获取");
             get_verification_code_tv.setClickable(true);
             get_verification_code_tv.setBackgroundColor(getResources().getColor(R.color.green_46DECE));
-
         }
     }
+
+
 
 
 }

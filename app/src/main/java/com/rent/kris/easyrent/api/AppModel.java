@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
+import com.rent.kris.easyrent.entity.CommonEntity;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.prefs.AppPrefs;
 import com.rent.kris.easyrent.util.LoginHelper;
@@ -70,14 +71,12 @@ public class AppModel extends ApiModel<Api> {
 
     public void login(final String userName, final String password, Subscriber<UserProfile> subscriber) {
         LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
-//        subscriber.onNext(new UserProfile());
-//        subscriber.onCompleted();
         Map<String, String> params = new HashMap<>();
         params.put("username", userName);
         params.put("password", password);
         params.put("client", "wap");
         Observable<UserProfile> observable = api().login(params)
-                .map(new ApiResponseFunc<UserProfile>())
+                .map(new MyApiResponseFunc<UserProfile>())
                 .onErrorResumeNext(new ApiOnErrorFunc<UserProfile>())
                 .flatMap(new Func1<UserProfile, Observable<UserProfile>>() {
                     @Override
@@ -91,9 +90,51 @@ public class AppModel extends ApiModel<Api> {
         toSubscribe(observable, subscriber, null);
     }
 
+    public void register(final String userName, final String password,String code, Subscriber<UserProfile> subscriber) {
+        LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
+        Map<String, String> params = new HashMap<>();
+        params.put("username", userName);
+        params.put("password", password);
+        params.put("captcha", code);
+        params.put("client", "wap");
+        Observable<UserProfile> observable = api().register(params)
+                .map(new MyApiResponseFunc<UserProfile>())
+                .onErrorResumeNext(new ApiOnErrorFunc<UserProfile>())
+                .flatMap(new Func1<UserProfile, Observable<UserProfile>>() {
+                    @Override
+                    public Observable<UserProfile> call(UserProfile userProfile) {
+                        LoginHelper.onLogin(userName, password, userProfile);
+                        RequestInterceptor.getInstance().setTokenValue(userProfile.key);
+                        return Observable.just(userProfile);
+                    }
+                });
+
+        toSubscribe(observable, subscriber, null);
+    }
+
+
+
 //    public void logout(Subscriber<Object> subscriber) {
 //        toSubscribe(api().logout(AppPrefs.getInstance().getServerIP(), AppPrefs.getInstance().getServerPort()), subscriber);
 //    }
+
+    public void getCode(String phoneStr,Subscriber<CommonEntity> subscriber) {
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phoneStr);
+        params.put("temid", "1");
+
+        Observable<CommonEntity> observable = api().getCode(params)
+                .map(new MyApiResponseFunc<CommonEntity>())
+                .onErrorResumeNext(new ApiOnErrorFunc<CommonEntity>())
+                .flatMap(new Func1<CommonEntity, Observable<CommonEntity>>() {
+                    @Override
+                    public Observable<CommonEntity> call(CommonEntity mCommonEntity) {
+                        return Observable.just(mCommonEntity);
+                    }
+                });
+        toSubscribe(observable, subscriber, null);
+    }
+
 
     /**
      * 下载一个文件

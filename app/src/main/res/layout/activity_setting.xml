@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/top_contacts_ll"
+            android:id="@+id/change_password_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"
@@ -58,7 +58,7 @@
         <View style="@style/XwWidget.Divider" />
 
         <LinearLayout
-            android:id="@+id/favorite_ll"
+            android:id="@+id/address_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"
@@ -94,7 +94,7 @@
         <View style="@style/XwWidget.Divider" />
 
         <LinearLayout
-            android:id="@+id/drafts_ll"
+            android:id="@+id/instructions_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"
@@ -131,6 +131,7 @@
         <View style="@style/XwWidget.Divider" />
 
         <LinearLayout
+            android:id="@+id/feedback_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"
@@ -166,6 +167,7 @@
         <View style="@style/XwWidget.Divider" />
 
         <LinearLayout
+            android:id="@+id/clear_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"
@@ -199,7 +201,7 @@
         <View style="@style/XwWidget.Divider" />
 
         <LinearLayout
-            android:id="@+id/user_message_ll"
+            android:id="@+id/about_us_ll"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/selector_white_gray"

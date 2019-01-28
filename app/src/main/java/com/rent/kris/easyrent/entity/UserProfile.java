@@ -11,6 +11,7 @@ public class UserProfile {
    public String username;
    public int userid;
    public String key;
+   public int state;
 
     public String getUsername() {
         return username;

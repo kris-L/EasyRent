@@ -1,13 +1,16 @@
 package com.rent.kris.easyrent;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.rent.kris.easyrent.api.AppModel;
+import com.rent.kris.easyrent.constant.Constant;
+import com.rent.kris.easyrent.prefs.SPSetting;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
 
 
     private static MyApplication instance = null;
@@ -39,4 +42,24 @@ public class MyApplication extends Application {
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
 
     }
+
+    /**
+     * 设置新接口使用Token  SharedPreferences的key参数不要变，直播库要用
+     *
+     * @param token
+     */
+    public void setToken(String token) {
+        SPSetting.getInstance().saveData(Constant.TOKEN, token);
+    }
+
+    /**
+     * 获取新接口使用Token   SharedPreferences的key参数不要变，直播库要用
+     *
+     * @return
+     */
+    public String getToken() {
+        String token = (String) SPSetting.getInstance().getData(Constant.TOKEN, "");
+        return token;
+    }
+
 }

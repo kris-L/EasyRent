@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
 
 /**
@@ -28,13 +29,19 @@ public class SixthFragment extends BaseFragment {
         return fragment;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sixth, container, false);
-        return view;
-    }
+//    @Nullable
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_sixth, container, false);
+//        return view;
+//    }
 
+    @Override
+    public void initView(View view) {
+        tvTitle.setText("商品");
+        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/product_list.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+        mWebView.loadUrl(url);
+    }
 
 
 

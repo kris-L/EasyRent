@@ -33,7 +33,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.LoginActivity"
+        <activity android:name=".ui.MainActivity"
 
             >
             <intent-filter>
@@ -43,8 +43,9 @@
             </intent-filter>
         </activity>
 
+        <!--LoginActivity-->
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.LoginActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -57,6 +58,13 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.PhoneBindingActivity" />
         <activity android:name=".ui.SetPasswordActivity" />
+        <activity android:name=".ui.RegisterActivity" />
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            />
+
 
 
         <!--高德地图 456a058f8699c8fff8496420ecdbd900-->

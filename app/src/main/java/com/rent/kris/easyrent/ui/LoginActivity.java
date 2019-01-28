@@ -4,17 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
+import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.event.EventManager;
 import com.rent.kris.easyrent.event.OnLoginEvent;
 import com.rent.kris.easyrent.prefs.AppPrefs;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.web.WebViewHelper;
 import com.umeng.socialize.UMAuthListener;
@@ -22,6 +25,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.xw.common.AppToast;
+import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.ext.http.retrofit.api.NoneProgressSubscriber;
 import com.xw.ext.http.retrofit.api.error.ApiException;
 
@@ -61,7 +65,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
+        String username = LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        phone_et.setText(username);
         initPlatforms();
+        if(!TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
+            Log.e("lsz","key="+UserProfilePrefs.getInstance().getUserToken());
+            MainActivity.intentTo(LoginActivity.this);
+            finish();
+        }
     }
 
     private void initPlatforms(){
@@ -74,7 +85,8 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.login_tv,R.id.new_user_tv,R.id.iv_qq_login,R.id.iv_weixin_login,R.id.iv_sina_login})
+    @OnClick({R.id.login_tv,R.id.new_user_tv,R.id.iv_qq_login,R.id.iv_weixin_login,
+            R.id.iv_sina_login,R.id.forget_password_tv})
     public void OnViewClick(View view){
         switch (view.getId()){
             case R.id.login_tv:
@@ -89,7 +101,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.new_user_tv:
-                PhoneBindingActivity.intentTo(LoginActivity.this);
+                RegisterActivity.intentTo(LoginActivity.this);
                 break;
 
             case R.id.iv_qq_login:
@@ -103,10 +115,15 @@ public class LoginActivity extends BaseActivity {
             case R.id.iv_sina_login:
                 UmEnter(1);
                 break;
+
+            case R.id.forget_password_tv:
+                SetPasswordActivity.intentTo(mContext);
+                break;
         }
     }
 
     private void requestLogin(final String name, final String pwd) {
+        showProgressDialog("正在登录…");
         WebViewHelper.clearWebViewCacheNCookies();
         AppModel.model().login(name, pwd, new NoneProgressSubscriber<UserProfile>() {
             @Override

@@ -56,7 +56,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/top_contacts_ll"
+                android:id="@+id/earnings_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -97,7 +97,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
-                android:id="@+id/favorite_ll"
+                android:id="@+id/housing_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -138,7 +138,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
-                android:id="@+id/drafts_ll"
+                android:id="@+id/tenant_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -179,6 +179,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
+                android:id="@+id/work_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
@@ -219,6 +220,7 @@
             <View style="@style/XwWidget.Divider" />
 
             <LinearLayout
+                android:id="@+id/my_appointment_ll"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/selector_white_gray"
