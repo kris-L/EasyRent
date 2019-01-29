@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
+import com.xw.common.prefs.LoginInfoPrefs;
 
 /**
  * Created by lsz  on 2019-01-28
@@ -40,7 +42,9 @@ public class FirstFragment2  extends BaseFragment {
     @Override
     public void initView(View view) {
         tvTitle.setText("易租");
-        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/indexa.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/indexa.html"+
+                "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
+                LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
         mWebView.loadUrl(url);
     }
 

@@ -16,6 +16,7 @@ import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
+import com.rent.kris.easyrent.util.Utils;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.common.util.TextViewUtils;
 
@@ -90,131 +91,82 @@ public class FouthFragment extends BaseFragment {
                 break;
 
             case R.id.my_account_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                 title = "";
-                 url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/my_account.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/my_account.html";
+                Utils.GotoWebView(getActivity(),url);
+
                 break;
 
             case R.id.my_contract_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                 title = "";
-                 url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/pact.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/pact.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_appointment_ll:
-                 intent = new Intent(getActivity(), WebViewActivity.class);
-                 title = "";
-                 url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/my-order.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/my-order.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_order_ll:
-                 intent = new Intent(getActivity(), WebViewActivity.class);
-                 title = "";
-                 url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.evaluate_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/evaluate.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/evaluate.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.favorite_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/collection.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/collection.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.share_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_homepage_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.attention_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.user_identification_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/landlord.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/landlord.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.user_service_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/index.php/mobile/yizu/keguphone.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/index.php/mobile/yizu/keguphone.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.user_message_ll:
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                intent.putExtra("url", url);
-                intent.putExtra("title", title);
-                startActivity(intent);
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.login_tv:
                 if(isLogin){
-                    intent = new Intent(getActivity(), WebViewActivity.class);
-                    title = "";
-                    url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/member.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
-                    intent.putExtra("url", url);
-                    intent.putExtra("title", title);
-                    startActivity(intent);
+                    url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/member.html";
+                    Utils.GotoWebView(getActivity(),url);
                 }else{
                     LoginActivity.intentTo(getActivity());
                 }
-
                 break;
 
         }
     }
+
+
+
 
 }

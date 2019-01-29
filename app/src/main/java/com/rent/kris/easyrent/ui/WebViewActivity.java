@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -43,10 +44,13 @@ public class WebViewActivity extends AppCompatActivity {
     private String takePhotoName;
     private String photoFileName;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+        mContext = this;
         initWebView();
     }
 
@@ -65,7 +69,7 @@ public class WebViewActivity extends AppCompatActivity {
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, this), "App");
+        mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, this,jsListener), "App");
 
         String url = getIntent().getStringExtra("url");
         mWebView.loadUrl(url);
@@ -108,53 +112,63 @@ public class WebViewActivity extends AppCompatActivity {
         }
     };
 
-    //去系统相册
-    public void pickPhoto(String funcName) {
-        pickPhotoName = funcName;
-        new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intent, REQUEST_PICK_IMAGE);
-                } else {
-                    Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+    @SuppressLint("CheckResult")
+    public JavaAndJSBridge.OnJSCallBack jsListener = new JavaAndJSBridge.OnJSCallBack(){
 
-
-    //去拍照
-    public void makePhoto(String funcName) {
-        takePhotoName = funcName;
-        new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-                    photoFileName = "img_" + System.currentTimeMillis() + ".jpeg";
-                    File currentPhotoFile = new File(Common.getBasePath(WebViewActivity.this) + Common.TEMP_DIR, photoFileName);
-                    photoFileName = currentPhotoFile.getAbsolutePath();
-                    int currentApiVersion = Build.VERSION.SDK_INT;
-                    if (currentApiVersion < 24) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(currentPhotoFile));
-                        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+        @Override
+        public void onPickPhoto() {
+            new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    if (aBoolean) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(intent, REQUEST_PICK_IMAGE);
                     } else {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
-                        ContentValues contentValues = new ContentValues(1);
-                        contentValues.put(MediaStore.Images.Media.DATA, currentPhotoFile.getAbsolutePath());
-                        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                        Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-    }
+            });
+        }
+
+        @Override
+        public void onMakePhoto() {
+            new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    if (aBoolean) {
+                        photoFileName = "img_" + System.currentTimeMillis() + ".jpeg";
+                        File currentPhotoFile = new File(Common.getBasePath(WebViewActivity.this) + Common.TEMP_DIR, photoFileName);
+                        photoFileName = currentPhotoFile.getAbsolutePath();
+                        int currentApiVersion = Build.VERSION.SDK_INT;
+                        if (currentApiVersion < 24) {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(currentPhotoFile));
+                            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                        } else {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
+                            ContentValues contentValues = new ContentValues(1);
+                            contentValues.put(MediaStore.Images.Media.DATA, currentPhotoFile.getAbsolutePath());
+                            Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                        }
+                    } else {
+                        Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onLoginNotify() {
+            LoginActivity.intentTo(mContext);
+            finish();
+        }
+    };
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

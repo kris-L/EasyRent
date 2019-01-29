@@ -16,6 +16,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.rent.kris.easyrent.MyApplication;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
+import com.rent.kris.easyrent.ui.WebViewActivity;
 import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.dialog.lib.WarnDialog;
@@ -89,6 +91,17 @@ public class Utils {
         Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$");
         Matcher m = p.matcher(mobiles);
         return m.matches();
+    }
+
+
+    public static void GotoWebView(Context mContext,String url){
+        Intent intent = new Intent(mContext, WebViewActivity.class);
+        String title = "";
+        url = url+"?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
+                LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        intent.putExtra("url", url);
+        intent.putExtra("title", title);
+        mContext.startActivity(intent);
     }
 
 
