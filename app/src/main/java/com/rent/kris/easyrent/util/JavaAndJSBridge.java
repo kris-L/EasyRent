@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.google.gson.JsonObject;
+import com.rent.kris.easyrent.ui.LoginActivity;
 import com.rent.kris.easyrent.ui.MainActivity;
 import com.rent.kris.easyrent.ui.WebViewActivity;
 
@@ -27,6 +28,12 @@ public class JavaAndJSBridge {
     public JavaAndJSBridge(@NonNull WebView webView, @NonNull Context context) {
         mWebView = webView;
         mContext = (WebViewActivity)context;
+    }
+
+    @JavascriptInterface
+    public void loginNotify() {
+        LoginActivity.intentTo(mContext);
+        mContext.finish();
     }
 
     //暴露给sdk的本地方法

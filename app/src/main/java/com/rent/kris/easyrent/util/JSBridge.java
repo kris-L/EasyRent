@@ -2,9 +2,11 @@ package com.rent.kris.easyrent.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.rent.kris.easyrent.ui.LoginActivity;
 import com.rent.kris.easyrent.ui.MainActivity;
 import com.rent.kris.easyrent.ui.WebViewActivity;
 
@@ -22,6 +24,14 @@ public class JSBridge {
         mWebView = webView;
         mContext = (MainActivity)context;
     }
+
+    @JavascriptInterface
+    public void loginNotify() {
+        Log.e("JSBridge","loginNotify");
+        LoginActivity.intentTo(mContext);
+        mContext.finish();
+    }
+
 
     //暴露给sdk的本地方法
     @JavascriptInterface

@@ -4,7 +4,8 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('H:/GIT/EasyRent/app/mykey/kris_key.keystore')
+//          storeFile file('H:/GIT/EasyRent/app/mykey/kris_key.keystore')
+            storeFile file('E:/javaWorkPlace/GIT/EasyRent/app/mykey/kris_key.keystore')
             keyAlias 'kris'
             keyPassword 'lszqq3476426'
             storePassword 'lszqq3476426'

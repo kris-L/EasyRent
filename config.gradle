@@ -12,7 +12,7 @@ ext {
             compileSdkVersion   : 27,
             targetSdkVersion    : 23,   //QBSDK(TBS)没适配7.0系统（SDK24）
             minSdkVersion       : 16,
-            versionName         : "1.8.1",
+            versionName         : "1.0.3",
             versionCode         : 109
     ]
 
