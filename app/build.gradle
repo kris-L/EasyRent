@@ -60,4 +60,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
     compile 'com.android.support:multidex:1.0.1'
     implementation rootProject.ext.deps.eventbus
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
+

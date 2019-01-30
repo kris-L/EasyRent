@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.io.File;
 
-public class Common {
+public class CommonUtils {
 
-    public static final String TEMP_DIR = "temp" + File.separator;//缓存目录
+    public static final String TEMP_DIR = "imageTemp" + File.separator;//缓存目录
 
 
     //获取根目录信息
@@ -24,4 +25,17 @@ public class Common {
         }
         return basePath + File.separator;
     }
+
+    //获取根目录信息
+    public static String getImagePath(Context context) {
+        String basePath = "";
+        boolean sdCardExist = Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED);
+        if (sdCardExist) {
+            basePath = Environment.getExternalStorageDirectory().toString()+ File.separator;//获取根目录
+            Log.e("lsz", "外部存储可用..." + basePath);
+        }
+        return basePath;
+    }
+
 }

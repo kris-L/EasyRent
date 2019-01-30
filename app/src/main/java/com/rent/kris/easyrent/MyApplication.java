@@ -1,8 +1,13 @@
 package com.rent.kris.easyrent;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.prefs.SPSetting;
@@ -19,6 +24,8 @@ public class MyApplication extends MultiDexApplication {
         return instance;
     }
 
+    public static int sWidthPix;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,13 +34,13 @@ public class MyApplication extends MultiDexApplication {
     }
 
     public void init(){
+        sWidthPix = getResources().getDisplayMetrics().widthPixels;
+
         AppModel.createAppModel(this);
         UMConfigure.init(this,"5b4ca2aab27b0a51c0000306"
                 ,"umeng", UMConfigure.DEVICE_TYPE_PHONE,"");
-    }
 
-//    //各个平台的配置，建议放在全局Application或者程序入口
-    {
+   //各个平台的配置，建议放在全局Application或者程序入口
         //微信
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         //新浪微博
@@ -41,6 +48,7 @@ public class MyApplication extends MultiDexApplication {
         //QQ登录
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
 
+        initImageLoader(this);
     }
 
     /**
@@ -60,6 +68,22 @@ public class MyApplication extends MultiDexApplication {
     public String getToken() {
         String token = (String) SPSetting.getInstance().getData(Constant.TOKEN, "");
         return token;
+    }
+
+    public static void initImageLoader(Context context) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .diskCacheFileCount(300)
+//                .imageDownloader(new MyImageDownloader(context))
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+//                .writeDebugLogs() // Remove for release app
+                .diskCacheExtraOptions(sWidthPix / 3, sWidthPix / 3, null)
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 
 }

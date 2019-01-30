@@ -7,9 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,23 +26,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.google.gson.stream.MalformedJsonException;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
-import com.rent.kris.easyrent.entity.CommonEntity;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
-import com.rent.kris.easyrent.util.Base64Util;
-import com.rent.kris.easyrent.util.Common;
+import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.util.RealPathUtil;
+import com.rent.kris.easyrent.util.TakePhotoUtils;
 import com.rent.kris.easyrent.web.WebViewSettings;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
-import com.xw.ext.http.retrofit.api.error.ApiException;
-import com.xw.ext.http.retrofit.api.error.ErrorSubscriber;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,8 +48,6 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.umeng.socialize.utils.DeviceConfig.context;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -173,23 +164,15 @@ public class WebViewActivity extends AppCompatActivity {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception {
                             if (aBoolean) {
-                                photoFileName = "img_" + System.currentTimeMillis() + ".jpeg";
-                                File currentPhotoFile = new File(Common.getBasePath(WebViewActivity.this) + Common.TEMP_DIR, photoFileName);
-                                photoUri = Uri.fromFile(currentPhotoFile);
-                                photoFileName = currentPhotoFile.getAbsolutePath();
-                                int currentApiVersion = Build.VERSION.SDK_INT;
-                                if (currentApiVersion < 24) {
-                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                                    startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-                                } else {
-                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
-                                    ContentValues contentValues = new ContentValues(1);
-                                    contentValues.put(MediaStore.Images.Media.DATA, currentPhotoFile.getAbsolutePath());
-                                    Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                    startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-                                }
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+
+//                                try {
+//                                    photoUri = TakePhotoUtils.takePhoto(WebViewActivity.this, REQUEST_TAKE_PHOTO);
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+
                             } else {
                                 Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                             }
@@ -266,7 +249,11 @@ public class WebViewActivity extends AppCompatActivity {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("someWord", someWord);
             mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + funcName + "\',\'" + jsonObject + "\')");
-        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK && null != photoFileName) {
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(WebViewActivity.this, "点击取消从相册选择", Toast.LENGTH_LONG).show();
+                return;
+            }
             saveCameraImage(data);
         }
     }
@@ -285,7 +272,7 @@ public class WebViewActivity extends AppCompatActivity {
                 fileName = photoUri.getPath();
             }
         } else {
-            Bitmap bmp = bmp = (Bitmap) data.getExtras().get("data");
+            Bitmap bmp = (Bitmap) data.getExtras().get("data");
             String filePath = Environment.getExternalStorageDirectory().toString() + File.separator + "EasyRent";
             fileName = filePath + "Pic_" + System.currentTimeMillis() + ".jpg";
 
@@ -315,6 +302,7 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void uploadPic(String imgPath) {
+        Log.e("lsz","imgPath = "+ imgPath);
         if (TextUtils.isEmpty(imgPath)) {
             return;
         }

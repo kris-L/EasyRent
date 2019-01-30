@@ -4,32 +4,22 @@ import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.entity.CommonEntity;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
-import com.rent.kris.easyrent.prefs.AppPrefs;
-import com.rent.kris.easyrent.prefs.UserProfilePrefs;
-import com.rent.kris.easyrent.util.Common;
 import com.rent.kris.easyrent.util.LoginHelper;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.dialog.lib.WarnDialog;
 import com.xw.ext.http.retrofit.api.ApiModel;
-import com.xw.ext.http.retrofit.api.ApiResponseFunc;
 import com.xw.ext.http.retrofit.api.error.ApiException;
 import com.xw.ext.http.retrofit.api.error.ApiOnErrorFunc;
-import com.xw.ext.http.retrofit.api.error.ErrorSubscriber;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +38,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class AppModel extends ApiModel<Api> {
@@ -243,15 +232,12 @@ public class AppModel extends ApiModel<Api> {
     }
 
 
-    public void uploadPicS(String key,String username,String imgPath,String type,
+    public void uploadPicS(String key,String username,List<String> pathList,String type,
                           String sonpath,String newname, String timestamp,
                           Callback<UploadResult> subscriber) {
         //1.创建MultipartBody.Builder对象
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);//表单类型
-        //2.获取图片，创建请求体
-        File file = new File(imgPath);
-        RequestBody body=RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
 
         //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
         builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
@@ -260,7 +246,14 @@ public class AppModel extends ApiModel<Api> {
         builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
         builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
         builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("file_0",file.getName(),body); //添加图片数据，body创建的请求体
+        for (int i=0;i<pathList.size();i++){
+            //2.获取图片，创建请求体
+            File file = new File(pathList.get(i));
+            if(file != null){
+                RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
+                builder.addFormDataPart("file_"+i,file.getName(),body); //添加图片数据，body创建的请求体
+            }
+        }
 
         //4.创建List<MultipartBody.Part> 集合，
         //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody

@@ -2,18 +2,19 @@ package com.rent.kris.easyrent.ui;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,10 +27,12 @@ import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.event.MessageEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
+import com.rent.kris.easyrent.ui.photopick.ImageInfo;
+import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
 import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
 import com.rent.kris.easyrent.util.Base64Util;
-import com.rent.kris.easyrent.util.Common;
+import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xw.common.prefs.LoginInfoPrefs;
@@ -38,6 +41,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +49,8 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.rent.kris.easyrent.ui.photopick.PhotoPickActivity.PHOTO_MAX_COUNT;
 
 public class MainActivity extends BaseActivity {
 
@@ -267,6 +273,7 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_PICK_IMAGE = 10086;
     private static final int PDD_PLAY_SNAKE = REQUEST_PICK_IMAGE + 1;
     private static final int REQUEST_TAKE_PHOTO = PDD_PLAY_SNAKE + 1;
+    public static final int RESULT_TAKE_IMAGE1 = 1024;
 
     //去拍照
     public void makePhoto(String funcName) {
@@ -276,7 +283,7 @@ public class MainActivity extends BaseActivity {
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
                     photoFileName = "img_" + System.currentTimeMillis() + ".jpeg";
-                    File currentPhotoFile = new File(Common.getBasePath(MainActivity.this) + Common.TEMP_DIR, photoFileName);
+                    File currentPhotoFile = new File(CommonUtils.getBasePath(MainActivity.this) + CommonUtils.TEMP_DIR, photoFileName);
                     photoFileName = currentPhotoFile.getAbsolutePath();
                     int currentApiVersion = android.os.Build.VERSION.SDK_INT;
                     if (currentApiVersion < 24) {
@@ -298,7 +305,11 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public String typeStr, sonpathStr, newnameStr, timestampStr;
+    public String typeStr ="";
+    public String sonpathStr="";
+    public String newnameStr="";
+    public String timestampStr="";
+    private ArrayList<ImageInfo> pickImages = new ArrayList<>();
 
     public void uploadImages(String type, String sonpath, String newname, String timestamp) {
         typeStr = type;
@@ -325,9 +336,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intent, REQUEST_PICK_IMAGE);
+//                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//                    startActivityForResult(intent, REQUEST_PICK_IMAGE);
+
+                    Intent intent = new Intent(MainActivity.this, PhotoPickActivity.class);
+                    intent.putExtra(PhotoPickActivity.EXTRA_MAX, PHOTO_MAX_COUNT);
+                    startActivityForResult(intent, MainActivity.RESULT_TAKE_IMAGE1);
                 } else {
                     Toast.makeText(MainActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                 }
@@ -348,7 +363,9 @@ public class MainActivity extends BaseActivity {
                 } else {
                     filePath = RealPathUtil.getRealPathFromURI(this, uri);
                 }
-                uploadPic(filePath);
+                List<String> pathList = new ArrayList<>();
+                    pathList.add(filePath);
+                uploadPicS(pathList);
 //                mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + pickPhotoName + "\',\'" + jsonObject + "\')");
             }
 
@@ -368,18 +385,33 @@ public class MainActivity extends BaseActivity {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("image64", base64Image);
 //            mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + takePhotoName + "\',\'" + jsonObject + "\')");
+        }else if(requestCode == RESULT_TAKE_IMAGE1 ){
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
+                    pickImages.addAll(pickPhots);
+                    List<String> pathList = new ArrayList<>();
+                    for (ImageInfo item : pickPhots) {
+                        pathList.add(item.path);
+                    }
+                    uploadPicS(pathList);
+                } catch (Exception e) {
+                    Log.e("lsz",e+"");
+                }
+            }
         }
 
     }
 
-    private void uploadPic(String imgPath) {
-        if (TextUtils.isEmpty(imgPath)) {
+    private void uploadPicS(List<String> pathList) {
+        if (pathList == null || pathList.size() == 0) {
+            Log.e("lsz", "未选择图片");
             return;
         }
         String key = UserProfilePrefs.getInstance().getUserToken();
         String userName = LoginInfoPrefs.getInstance(this).getUserName();
         AppModel.model().uploadPicS(key, userName,
-                imgPath, typeStr, sonpathStr, newnameStr, timestampStr,
+                pathList, typeStr, sonpathStr, newnameStr, timestampStr,
                 new Callback<UploadResult>() {
                     @Override
                     public void onResponse(Call<UploadResult> call, Response<UploadResult> response) {

@@ -64,6 +64,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.photopick.PhotoPickActivity" />
 
 
 

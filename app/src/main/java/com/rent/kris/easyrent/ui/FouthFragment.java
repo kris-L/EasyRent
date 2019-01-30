@@ -16,6 +16,7 @@ import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
+import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
 import com.rent.kris.easyrent.util.Utils;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.common.util.TextViewUtils;
@@ -152,6 +153,9 @@ public class FouthFragment extends BaseFragment {
             case R.id.user_message_ll:
                 url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
                 Utils.GotoWebView(getActivity(),url);
+//                Intent intent = new Intent(getActivity(), PhotoPickActivity.class);
+//                intent.putExtra(PhotoPickActivity.EXTRA_MAX, 5);
+//                getActivity().startActivityForResult(intent, MainActivity.RESULT_TAKE_IMAGE1);
                 break;
 
             case R.id.login_tv:

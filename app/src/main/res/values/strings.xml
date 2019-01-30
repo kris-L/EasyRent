@@ -11,4 +11,7 @@
     <string name="merchant_str">商家</string>
     <string name="merchandise_str">商品</string>
     <string name="shopping_cart_str">购物车</string>
+
+    <string name="action_settings">设置</string>
+
 </resources>

@@ -21,5 +21,8 @@
     <color name="gray_80">#808080</color>
     <color name="gray_63">#636363</color>
 
+    <color name="divide_line">#D8DDE4</color>
+    <color name="camera_background">#ff353535</color>
+
 
 </resources>

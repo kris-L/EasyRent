@@ -66,6 +66,7 @@ public class BaseActivity extends AppCompatActivity implements ProgressSubscribe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         registerReceiver();
     }
 

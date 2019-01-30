@@ -155,7 +155,9 @@ public class BaseFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(MessageEvent messageEvent) {
-        mWebView.loadUrl("javascript:uploadSuccess()");
+        if(mWebView != null){
+            mWebView.loadUrl("javascript:uploadSuccess()");
+        }
     }
 
 }
