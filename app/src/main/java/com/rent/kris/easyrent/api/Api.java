@@ -1,17 +1,25 @@
 package com.rent.kris.easyrent.api;
 
 import com.rent.kris.easyrent.entity.CommonEntity;
+import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
 
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.adapter.rxjava.Result;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -42,5 +50,16 @@ public interface Api {
     @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Connect/smsfs.html")
     Observable<MyApiResponse<CommonEntity>> getCode(@Body Map<String, String> params);
 
+
+    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
+    Call<ResponseBody> uploadPic(@QueryMap Map<String,String> params, @Part MultipartBody.Part file);
+
+    @Multipart                  //这里用Multipart
+    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
+    Call<UploadResult> myUpload(@Part List<MultipartBody.Part> partLis);
+
+    @Multipart                  //这里用Multipart
+    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadWeixiu")
+    Call<UploadResult> myUploadS(@Part List<MultipartBody.Part> partLis);
 
 }

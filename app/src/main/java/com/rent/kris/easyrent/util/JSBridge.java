@@ -6,6 +6,9 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.rent.kris.easyrent.entity.UploadInfo;
 import com.rent.kris.easyrent.ui.LoginActivity;
 import com.rent.kris.easyrent.ui.MainActivity;
 import com.rent.kris.easyrent.ui.WebViewActivity;
@@ -20,6 +23,11 @@ public class JSBridge {
     private final WebView mWebView;
     private final MainActivity mContext;
 
+    private OnJSCallBack jsListener;
+    public interface OnJSCallBack{
+        void uploadImages(String type,String sonpath,String newname,String timestamp);
+    }
+
     public JSBridge(@NonNull WebView webView, @NonNull Context context) {
         mWebView = webView;
         mContext = (MainActivity)context;
@@ -30,6 +38,16 @@ public class JSBridge {
         Log.e("JSBridge","loginNotify");
         LoginActivity.intentTo(mContext);
         mContext.finish();
+    }
+
+
+    @JavascriptInterface
+    public void uploadImages(String jsonstr) {
+        Log.e("lsz","uploadImages");
+        Gson gson = new Gson();
+        UploadInfo uploadInfo = gson.fromJson(jsonstr, new TypeToken<UploadInfo>() {
+        }.getType());
+        mContext.uploadImages(uploadInfo.type,uploadInfo.sonpath,uploadInfo.newname,uploadInfo.timestamp);
     }
 
 
@@ -69,10 +87,14 @@ public class JSBridge {
         if (needCompress) {
             //压缩裁剪代码就不贴了，这里只是个简单的选择系统相册的示例
         } else {
-            mContext.pickPhoto(funcName);
+            mContext.pickPhoto();
         }
     }
 
+    @JavascriptInterface
+    public void callPhone(String phone) {
+        mContext.onCallPhone(phone);
+    }
 
 
 

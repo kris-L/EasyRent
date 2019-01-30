@@ -20,7 +20,11 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
+import com.rent.kris.easyrent.entity.UploadResult;
+import com.rent.kris.easyrent.event.MessageEvent;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
 import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
@@ -28,6 +32,9 @@ import com.rent.kris.easyrent.util.Base64Util;
 import com.rent.kris.easyrent.util.Common;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.xw.common.prefs.LoginInfoPrefs;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +42,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity {
 
@@ -45,7 +55,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fl_tab_container)
     FrameLayout fl_tab_container;
 
-    private static final String TAG_FRAG_FIRST= "app:fragment:first";
+    private static final String TAG_FRAG_FIRST = "app:fragment:first";
     private static final String TAG_FRAG_SECOND = "app:fragment:second";
     private static final String TAG_FRAG_THIRD = "app:fragment:third";
     private static final String TAG_FRAG_FOURTH = "app:fragment:fourth";
@@ -84,7 +94,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
         ButterKnife.bind(this);
-
         initView();
     }
 
@@ -107,49 +116,49 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFirstClick() {
                 selectIndex = 1;
-                mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContent(tabType,selectIndex);
+                mBottomBar.setBottonTabView(tabType, selectIndex);
+                switchContent(tabType, selectIndex);
             }
 
             @Override
             public void onSecondClick() {
-                selectIndex =2;
-                mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContent(tabType,selectIndex);
+                selectIndex = 2;
+                mBottomBar.setBottonTabView(tabType, selectIndex);
+                switchContent(tabType, selectIndex);
             }
 
             @Override
             public void onThirdClick() {
-                selectIndex =3;
-                mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContent(tabType,selectIndex);
+                selectIndex = 3;
+                mBottomBar.setBottonTabView(tabType, selectIndex);
+                switchContent(tabType, selectIndex);
             }
 
             @Override
             public void onFouthClick() {
                 selectIndex = 4;
-                mBottomBar.setBottonTabView(tabType,selectIndex);
-                switchContent(tabType,selectIndex);
+                mBottomBar.setBottonTabView(tabType, selectIndex);
+                switchContent(tabType, selectIndex);
             }
 
             @Override
             public void onCenterClick() {
-                PopupMenuUtil.getInstance().showUp(mContext, mCenterImage,new PopupMenuUtil.OnButtonClick(){
+                PopupMenuUtil.getInstance().showUp(mContext, mCenterImage, new PopupMenuUtil.OnButtonClick() {
 
                     @Override
                     public void onRentClick() {
                         tabType = Constant.TYPE_TAB_EASY_HOME;
-                        mBottomBar.setBottonTabView(tabType,selectIndex);
+                        mBottomBar.setBottonTabView(tabType, selectIndex);
                         switchBottomTab();
-                        switchContent(tabType,selectIndex);
+                        switchContent(tabType, selectIndex);
                     }
 
                     @Override
                     public void onLifeClick() {
                         tabType = Constant.TYPE_APP_EASY_LIFE;
-                        mBottomBar.setBottonTabView(tabType,selectIndex);
+                        mBottomBar.setBottonTabView(tabType, selectIndex);
                         switchBottomTab();
-                        switchContent(tabType,selectIndex);
+                        switchContent(tabType, selectIndex);
                     }
                 });
             }
@@ -165,23 +174,23 @@ public class MainActivity extends BaseActivity {
             return thirdFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_FOURTH)) {
             return fouthFragment;
-        } else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_FIFTH)){
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_FIFTH)) {
             return fifthFragment;
-        }else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_SIXTH)){
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_SIXTH)) {
             return sixthFragment;
-        }else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_SEVENTH)){
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_SEVENTH)) {
             return seventhFragment;
-        } else if(TextUtils.equals(currentFragmentTag, TAG_FRAG_EIGHTH)){
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_EIGHTH)) {
             return eighthFragment;
-        } else{
+        } else {
             return firstFragment;
         }
 
     }
 
-    private void switchContent(int tabType,int selectIndex){
-        if(tabType == Constant.TYPE_TAB_EASY_HOME){
-            switch (selectIndex){
+    private void switchContent(int tabType, int selectIndex) {
+        if (tabType == Constant.TYPE_TAB_EASY_HOME) {
+            switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), firstFragment, TAG_FRAG_FIRST);
                     break;
@@ -195,8 +204,8 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), fouthFragment, TAG_FRAG_FOURTH);
                     break;
             }
-        }else{
-            switch (selectIndex){
+        } else {
+            switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), fifthFragment, TAG_FRAG_FIFTH);
                     break;
@@ -246,7 +255,7 @@ public class MainActivity extends BaseActivity {
      * 刚打开popupWindow 执行的动画
      */
     private void switchBottomTab() {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(fl_tab_container, "rotationY", 0f,360f);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(fl_tab_container, "rotationY", 0f, 360f);
         objectAnimator.setDuration(800);
         objectAnimator.start();
     }
@@ -258,6 +267,7 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_PICK_IMAGE = 10086;
     private static final int PDD_PLAY_SNAKE = REQUEST_PICK_IMAGE + 1;
     private static final int REQUEST_TAKE_PHOTO = PDD_PLAY_SNAKE + 1;
+
     //去拍照
     public void makePhoto(String funcName) {
         takePhotoName = funcName;
@@ -288,9 +298,29 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    public String typeStr, sonpathStr, newnameStr, timestampStr;
+
+    public void uploadImages(String type, String sonpath, String newname, String timestamp) {
+        typeStr = type;
+        sonpathStr = sonpath;
+        newnameStr = newname;
+        timestampStr = timestamp;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                pickPhoto();
+            }
+        });
+
+    }
+
+    public void onCallPhone(final String phone) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+        startActivity(intent);
+    }
+
     //去系统相册
-    public void pickPhoto(String funcName) {
-        pickPhotoName = funcName;
+    public void pickPhoto() {
         new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -318,11 +348,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     filePath = RealPathUtil.getRealPathFromURI(this, uri);
                 }
-                String base64Image = Base64Util.encodeBase64ImageFile(filePath);
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("image64", base64Image);
-                jsonObject.addProperty("message", "图片获取成功");
-                Log.d("WebViewActivity", "jsonObject:" + jsonObject);
+                uploadPic(filePath);
 //                mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + pickPhotoName + "\',\'" + jsonObject + "\')");
             }
 
@@ -343,6 +369,30 @@ public class MainActivity extends BaseActivity {
             jsonObject.addProperty("image64", base64Image);
 //            mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + takePhotoName + "\',\'" + jsonObject + "\')");
         }
+
+    }
+
+    private void uploadPic(String imgPath) {
+        if (TextUtils.isEmpty(imgPath)) {
+            return;
+        }
+        String key = UserProfilePrefs.getInstance().getUserToken();
+        String userName = LoginInfoPrefs.getInstance(this).getUserName();
+        AppModel.model().uploadPicS(key, userName,
+                imgPath, typeStr, sonpathStr, newnameStr, timestampStr,
+                new Callback<UploadResult>() {
+                    @Override
+                    public void onResponse(Call<UploadResult> call, Response<UploadResult> response) {
+                        Log.e("lsz", "上传成功");
+//                        mWebView.loadUrl("javascript:uploadSuccess()");
+                        EventBus.getDefault().post(new MessageEvent("上传成功"));
+                    }
+
+                    @Override
+                    public void onFailure(Call<UploadResult> call, Throwable t) {
+                        Log.e("lsz", "上传失败");
+                    }
+                });
     }
 
 }

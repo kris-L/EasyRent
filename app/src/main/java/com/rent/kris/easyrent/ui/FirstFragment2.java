@@ -8,9 +8,14 @@ import android.view.ViewGroup;
 
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.event.MessageEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
 import com.xw.common.prefs.LoginInfoPrefs;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lsz  on 2019-01-28
@@ -47,7 +52,6 @@ public class FirstFragment2  extends BaseFragment {
                 LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
         mWebView.loadUrl(url);
     }
-
 
 
 

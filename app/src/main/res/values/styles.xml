@@ -16,5 +16,14 @@
         <item name="android:background">@color/gray_dd</item>
     </style>
 
+    <style name="MainAddDialog" parent="@style/commonDialog">
+        <item name="android:windowAnimationStyle">@style/MainAddDialogAnimation</item>
+    </style>
+
+    <style name="MainAddDialogAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/in_from_down</item>
+        <item name="android:windowExitAnimation">@anim/out_to_down</item>
+    </style>
+
 
 </resources>

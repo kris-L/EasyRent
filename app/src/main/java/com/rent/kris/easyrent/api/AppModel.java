@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.entity.CommonEntity;
+import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.prefs.AppPrefs;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
+import com.rent.kris.easyrent.util.Common;
 import com.rent.kris.easyrent.util.LoginHelper;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.dialog.lib.WarnDialog;
@@ -31,9 +35,14 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import okio.Okio;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
@@ -205,7 +214,62 @@ public class AppModel extends ApiModel<Api> {
         }
     }
 
+    public void uploadPic(String key,String username,String imgPath,String type,
+                          String sonpath,String newname, String timestamp,
+                          Callback<UploadResult> subscriber) {
+        //1.创建MultipartBody.Builder对象
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);//表单类型
+       //2.获取图片，创建请求体
+        File file = new File(imgPath);
+        RequestBody body=RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
 
+        //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
+        builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("username", username);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("type", type);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("file",file.getName(),body); //添加图片数据，body创建的请求体
+
+        //4.创建List<MultipartBody.Part> 集合，
+        //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody
+        //  再调用MultipartBody的parts()方法返回MultipartBody.Part集合
+        List<MultipartBody.Part> parts = builder.build().parts();
+        //5.最后进行HTTP请求，传入parts即可
+        Call<UploadResult> uploadPic = api().myUpload(parts);
+        uploadPic.enqueue(subscriber);
+    }
+
+
+    public void uploadPicS(String key,String username,String imgPath,String type,
+                          String sonpath,String newname, String timestamp,
+                          Callback<UploadResult> subscriber) {
+        //1.创建MultipartBody.Builder对象
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);//表单类型
+        //2.获取图片，创建请求体
+        File file = new File(imgPath);
+        RequestBody body=RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
+
+        //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
+        builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("username", username);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("type", type);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("file_0",file.getName(),body); //添加图片数据，body创建的请求体
+
+        //4.创建List<MultipartBody.Part> 集合，
+        //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody
+        //  再调用MultipartBody的parts()方法返回MultipartBody.Part集合
+        List<MultipartBody.Part> parts = builder.build().parts();
+        //5.最后进行HTTP请求，传入parts即可
+        Call<UploadResult> uploadPic = api().myUploadS(parts);
+        uploadPic.enqueue(subscriber);
+    }
 
 
 

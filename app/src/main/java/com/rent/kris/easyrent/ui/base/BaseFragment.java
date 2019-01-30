@@ -29,10 +29,15 @@ import android.widget.Toast;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.event.MessageEvent;
 import com.rent.kris.easyrent.util.JSBridge;
 import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.web.WebViewHelper;
 import com.rent.kris.easyrent.web.WebViewSettings;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -52,6 +57,7 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_commonality, container, false);
         unbinder = ButterKnife.bind(this,view);
+        EventBus.getDefault().register(this);
         initWebView(view);
         initView(view);
         return view;
@@ -103,6 +109,8 @@ public class BaseFragment extends Fragment {
     }
 
 
+
+
     public WebViewClient mWebViewClient = new WebViewClient() {
 //        //将约定好的空js文件替换为本地的
 //        @Override
@@ -140,6 +148,14 @@ public class BaseFragment extends Fragment {
         if(unbinder != null){
             unbinder.unbind();
         }
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(MessageEvent messageEvent) {
+        mWebView.loadUrl("javascript:uploadSuccess()");
     }
 
 }

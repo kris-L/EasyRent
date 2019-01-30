@@ -6,6 +6,10 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.rent.kris.easyrent.entity.UploadInfo;
+
 
 public class JavaAndJSBridge {
     private final WebView mWebView;
@@ -20,7 +24,9 @@ public class JavaAndJSBridge {
     public interface OnJSCallBack{
         void onPickPhoto();
         void onMakePhoto();
+        void uploadImage(String type,String sonpath,String newname,String timestamp);
         void onLoginNotify();
+        void onCallPhone(String phone);
     }
 
 
@@ -35,8 +41,34 @@ public class JavaAndJSBridge {
         if(jsListener != null){
             jsListener.onLoginNotify();
         }
-
     }
+
+    @JavascriptInterface
+    public void uploadImage(String jsonstr) {
+        Log.e("lsz","uploadImage");
+        Gson gson = new Gson();
+        UploadInfo uploadInfo = gson.fromJson(jsonstr, new TypeToken<UploadInfo>() {
+        }.getType());
+        if(jsListener != null && uploadInfo != null){
+            jsListener.uploadImage(uploadInfo.type,uploadInfo.sonpath,uploadInfo.newname,uploadInfo.timestamp);
+        }
+    }
+
+    @JavascriptInterface
+    public void uploadImages(String type,String sonpath,String newname,String timestamp) {
+        if(jsListener != null){
+            jsListener.uploadImage(type,sonpath, newname,timestamp);
+        }
+    }
+
+    @JavascriptInterface
+    public void callPhone(String phone) {
+        if(jsListener != null){
+            jsListener.onCallPhone(phone);
+        }
+    }
+
+
 
     //暴露给sdk的本地方法
     @JavascriptInterface
