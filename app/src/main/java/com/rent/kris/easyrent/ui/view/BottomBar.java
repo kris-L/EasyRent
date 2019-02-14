@@ -127,8 +127,143 @@ public class BottomBar extends LinearLayout {
                     tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
             }
-        }
+        }else if(type == Constant.TYPE_TAB_EASY_CATE){
+            tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
+            tab_first_text_tv.setText("美食餐饮");
+            tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
+            tab_second_text_tv.setText(getResources().getText(R.string.merchandise_str));
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_text_tv.setText(getResources().getText(R.string.shopping_cart_str));
+            tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
+            tab_fouth_text_tv.setText(getResources().getText(R.string.easy_mine_str));
+            tab_first_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_second_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_third_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
 
+            switch (select){
+                case 1:
+                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_merchant));
+                    tab_first_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 2:
+                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_goods));
+                    tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 3:
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_shopping_cart));
+                    tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 4:
+                    tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine_pre));
+                    tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+            }
+
+
+        }else if(type == Constant.TYPE_APP_EASY_BEAUTY){
+            tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
+            tab_first_text_tv.setText("农特产品");
+            tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
+            tab_second_text_tv.setText(getResources().getText(R.string.merchandise_str));
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_text_tv.setText(getResources().getText(R.string.shopping_cart_str));
+            tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
+            tab_fouth_text_tv.setText(getResources().getText(R.string.easy_mine_str));
+            tab_first_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_second_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_third_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+
+            switch (select){
+                case 1:
+                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_merchant));
+                    tab_first_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 2:
+                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_goods));
+                    tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 3:
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_shopping_cart));
+                    tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 4:
+                    tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine_pre));
+                    tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+            }
+
+
+        }else if(type == Constant.TYPE_TAB_EASY_FARM){
+            tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
+            tab_first_text_tv.setText("美容美发");
+            tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
+            tab_second_text_tv.setText(getResources().getText(R.string.merchandise_str));
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_text_tv.setText(getResources().getText(R.string.shopping_cart_str));
+            tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
+            tab_fouth_text_tv.setText(getResources().getText(R.string.easy_mine_str));
+            tab_first_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_second_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_third_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+
+            switch (select){
+                case 1:
+                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_merchant));
+                    tab_first_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 2:
+                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_goods));
+                    tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 3:
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_shopping_cart));
+                    tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 4:
+                    tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine_pre));
+                    tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+            }
+
+
+        }else if(type == Constant.TYPE_APP_EASY_FORUM){
+            tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
+            tab_first_text_tv.setText("首页");
+            tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
+            tab_second_text_tv.setText("搜索");
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_text_tv.setText("唠叨");
+            tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
+            tab_fouth_text_tv.setText("文章");
+            tab_first_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_second_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_third_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+            tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.gray_33));
+
+            switch (select){
+                case 1:
+                    tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_merchant));
+                    tab_first_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 2:
+                    tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_goods));
+                    tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 3:
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_shopping_cart));
+                    tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+                case 4:
+                    tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine_pre));
+                    tab_fouth_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
+                    break;
+            }
+
+
+        }
     }
 
     /**

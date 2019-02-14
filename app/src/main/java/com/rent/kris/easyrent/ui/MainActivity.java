@@ -21,12 +21,16 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.adapter.SelectModuleAdapter;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.event.MessageEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
+import com.rent.kris.easyrent.ui.base.CommonFragment;
+import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
+import com.rent.kris.easyrent.ui.dialog.SelectModuleDialog;
 import com.rent.kris.easyrent.ui.photopick.ImageInfo;
 import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
@@ -83,11 +87,30 @@ public class MainActivity extends BaseActivity {
     private SeventhFragment seventhFragment;
     private EighthFragment eighthFragment;
 
+    private CommonFragment commonFragment31;
+    private CommonFragment commonFragment32;
+    private CommonFragment commonFragment33;
+    private CommonFragment commonFragment34;
+
+    private CommonFragment commonFragment41;
+    private CommonFragment commonFragment42;
+    private CommonFragment commonFragment43;
+    private CommonFragment commonFragment44;
+
+    private CommonFragment commonFragment51;
+    private CommonFragment commonFragment52;
+    private CommonFragment commonFragment53;
+    private CommonFragment commonFragment54;
+
+    private CommonFragment commonFragment61;
+    private CommonFragment commonFragment62;
+    private CommonFragment commonFragment63;
+    private CommonFragment commonFragment64;
+
 
     private String currentFragmentTag;
     private int tabType = Constant.TYPE_TAB_EASY_HOME;
     private int selectIndex = 1;
-
 
     public static void intentTo(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -114,6 +137,31 @@ public class MainActivity extends BaseActivity {
         sixthFragment = SixthFragment.getInstance(true);
         seventhFragment = SeventhFragment.getInstance(true);
         eighthFragment = EighthFragment.getInstance(true);
+
+        String urlStr = "http://app.tit306.com/appa/food/index.html";
+        String title = "美食";
+        commonFragment31 = CommonFragment.newInstance(urlStr,title);
+        urlStr = "http://app.tit306.com/appa/farmers/index.html";
+        title = "农产品";
+        commonFragment41 = CommonFragment.newInstance(urlStr,title);
+        urlStr = "http://app.tit306.com/appa/beauty/index.html";
+        title = "美容美发";
+        commonFragment51 = CommonFragment.newInstance(urlStr,title);
+
+        urlStr = "http://app.tit306.com/appa/bbs/";
+        title = "论坛";
+        commonFragment61 = CommonFragment.newInstance(urlStr,title);
+        urlStr = "http://app.tit306.com/appa/bbs/index.php/search";
+        title = "论坛";
+        commonFragment62 = CommonFragment.newInstance(urlStr,title);
+        urlStr = "http://app.tit306.com/appa/bbs/weibo";
+        title = "论坛";
+        commonFragment63 = CommonFragment.newInstance(urlStr,title);
+        urlStr = "http://app.tit306.com/appa/bbs/index.php/article";
+        title = "论坛";
+        commonFragment64 = CommonFragment.newInstance(urlStr,title);
+
+
 
         currentFragmentTag = TAG_FRAG_FIRST;
         transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
@@ -149,27 +197,56 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onCenterClick() {
-                PopupMenuUtil.getInstance().showUp(mContext, mCenterImage, new PopupMenuUtil.OnButtonClick() {
-
-                    @Override
-                    public void onRentClick() {
-                        tabType = Constant.TYPE_TAB_EASY_HOME;
-                        mBottomBar.setBottonTabView(tabType, selectIndex);
-                        switchBottomTab();
-                        switchContent(tabType, selectIndex);
-                    }
-
-                    @Override
-                    public void onLifeClick() {
-                        tabType = Constant.TYPE_APP_EASY_LIFE;
-                        mBottomBar.setBottonTabView(tabType, selectIndex);
-                        switchBottomTab();
-                        switchContent(tabType, selectIndex);
-                    }
-                });
+                showSelectDialog();
             }
         });
     }
+
+
+
+    public SelectModuleDialog dialog;
+    private void showSelectDialog() {
+         dialog = new SelectModuleDialog(this,tabType,new SelectModuleAdapter.OnItemViewClickListener() {
+
+            @Override
+            public void onImageClick(int position) {
+                dialog.dismiss();
+                if(position == 0){
+                    tabType = Constant.TYPE_TAB_EASY_HOME;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }else if(position == 1){
+                    tabType = Constant.TYPE_APP_EASY_LIFE;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }else if(position == 2){
+                    tabType = Constant.TYPE_TAB_EASY_CATE;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }else if(position == 3){
+                    tabType = Constant.TYPE_APP_EASY_BEAUTY;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }else if(position == 4){
+                    tabType = Constant.TYPE_TAB_EASY_FARM;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }else if(position == 5){
+                    tabType = Constant.TYPE_APP_EASY_FORUM;
+                    mBottomBar.setBottonTabView(tabType, selectIndex);
+                    switchBottomTab();
+                    switchContent(tabType, selectIndex);
+                }
+            }
+        });
+        dialog.show();
+    }
+
 
     private Fragment getCurrFragment() {
         if (TextUtils.equals(currentFragmentTag, TAG_FRAG_FIRST)) {
@@ -210,7 +287,7 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), fouthFragment, TAG_FRAG_FOURTH);
                     break;
             }
-        } else {
+        } else if (tabType == Constant.TYPE_APP_EASY_LIFE) {
             switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), fifthFragment, TAG_FRAG_FIFTH);
@@ -225,7 +302,68 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
                     break;
             }
+        } else if (tabType == Constant.TYPE_TAB_EASY_CATE){
+            switch (selectIndex) {
+                case 1:
+                    switchContentFragment(getCurrFragment(), commonFragment31, TAG_FRAG_FIFTH);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    break;
+            }
+        } else if (tabType == Constant.TYPE_APP_EASY_BEAUTY){
+            switch (selectIndex) {
+                case 1:
+                    switchContentFragment(getCurrFragment(), commonFragment41, TAG_FRAG_FIFTH);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    break;
+            }
+        } else if (tabType == Constant.TYPE_TAB_EASY_FARM){
+            switch (selectIndex) {
+                case 1:
+                    switchContentFragment(getCurrFragment(), commonFragment51, TAG_FRAG_FIFTH);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    break;
+            }
+        } else if (tabType == Constant.TYPE_APP_EASY_FORUM){
+            switch (selectIndex) {
+                case 1:
+                    switchContentFragment(getCurrFragment(), commonFragment61, TAG_FRAG_FIFTH);
+                    break;
+                case 2:
+                    switchContentFragment(getCurrFragment(), commonFragment62, TAG_FRAG_SIXTH);
+                    break;
+                case 3:
+                    switchContentFragment(getCurrFragment(), commonFragment63, TAG_FRAG_SEVENTH);
+                    break;
+                case 4:
+                    switchContentFragment(getCurrFragment(), commonFragment64, TAG_FRAG_EIGHTH);
+                    break;
+            }
         }
+
     }
 
 
