@@ -3,12 +3,21 @@ package com.rent.kris.easyrent.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
+import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.event.LogOutEvent;
+import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
+import com.xw.common.prefs.LoginInfoPrefs;
 
+import org.greenrobot.eventbus.EventBus;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -17,6 +26,9 @@ import butterknife.OnClick;
  */
 
 public class SettingActivity extends BaseActivity {
+
+    @BindView(R.id.log_out_tv)
+    TextView log_out_tv;
 
     private Context mContext;
     public static void intentTo(Context context) {
@@ -35,6 +47,10 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initViews() {
+        if(TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
+            log_out_tv.setBackground(getResources().getDrawable(R.drawable.shape_circular_gray));
+            log_out_tv.setEnabled(false);
+        }
 
     }
 
@@ -48,8 +64,9 @@ public class SettingActivity extends BaseActivity {
         switch(view.getId()){
             case R.id.log_out_tv:
                 UserProfilePrefs.getInstance().saveUserToken("");
-                LoginActivity.intentTo(this);
+                EventBus.getDefault().post(new LogOutEvent());
                 finish();
+                MainActivity.intentTo(this);
                 break;
 
             case R.id.change_password_ll:

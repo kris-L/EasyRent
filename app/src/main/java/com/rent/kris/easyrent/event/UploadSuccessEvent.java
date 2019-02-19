@@ -3,9 +3,9 @@ package com.rent.kris.easyrent.event;
 /**
  * Created by kris on 2019/1/30.
  */
-public class MessageEvent {
+public class UploadSuccessEvent {
     private String message;
-    public  MessageEvent(String message){
+    public UploadSuccessEvent(String message){
         this.message=message;
     }
     public String getMessage() {

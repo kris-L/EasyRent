@@ -8,13 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,23 +25,25 @@ import com.rent.kris.easyrent.adapter.SelectModuleAdapter;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.entity.UploadResult;
-import com.rent.kris.easyrent.event.MessageEvent;
+import com.rent.kris.easyrent.event.LogOutEvent;
+import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.ui.base.CommonFragment;
-import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
 import com.rent.kris.easyrent.ui.dialog.SelectModuleDialog;
 import com.rent.kris.easyrent.ui.photopick.ImageInfo;
 import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
-import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
 import com.rent.kris.easyrent.util.Base64Util;
 import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,7 +76,22 @@ public class MainActivity extends BaseActivity {
     private static final String TAG_FRAG_SIXTH = "app:fragment:sixth";
     private static final String TAG_FRAG_SEVENTH = "app:fragment:seventh";
     private static final String TAG_FRAG_EIGHTH = "app:fragment:eighth";
-
+    private static final String TAG_FRAG_COMMON_31 = "app:fragment:common31";
+    private static final String TAG_FRAG_COMMON_32 = "app:fragment:common32";
+    private static final String TAG_FRAG_COMMON_33 = "app:fragment:common33";
+    private static final String TAG_FRAG_COMMON_34 = "app:fragment:common34";
+    private static final String TAG_FRAG_COMMON_41 = "app:fragment:common41";
+    private static final String TAG_FRAG_COMMON_42 = "app:fragment:common42";
+    private static final String TAG_FRAG_COMMON_43 = "app:fragment:common43";
+    private static final String TAG_FRAG_COMMON_44 = "app:fragment:common44";
+    private static final String TAG_FRAG_COMMON_51 = "app:fragment:common51";
+    private static final String TAG_FRAG_COMMON_52 = "app:fragment:common52";
+    private static final String TAG_FRAG_COMMON_53 = "app:fragment:common53";
+    private static final String TAG_FRAG_COMMON_54 = "app:fragment:common54";
+    private static final String TAG_FRAG_COMMON_61 = "app:fragment:common61";
+    private static final String TAG_FRAG_COMMON_62 = "app:fragment:common62";
+    private static final String TAG_FRAG_COMMON_63 = "app:fragment:common63";
+    private static final String TAG_FRAG_COMMON_64 = "app:fragment:common64";
 
     private Context mContext;
     private FirstFragment2 firstFragment;
@@ -123,6 +140,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -265,7 +283,39 @@ public class MainActivity extends BaseActivity {
             return seventhFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_EIGHTH)) {
             return eighthFragment;
-        } else {
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_31)) {
+            return commonFragment31;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_32)) {
+            return sixthFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_33)) {
+            return seventhFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_34)) {
+            return eighthFragment;
+        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_41)) {
+            return commonFragment41;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_42)) {
+            return sixthFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_43)) {
+            return seventhFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_44)) {
+            return eighthFragment;
+        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_51)) {
+            return commonFragment51;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_52)) {
+            return sixthFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_53)) {
+            return seventhFragment;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_54)) {
+            return eighthFragment;
+        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_61)) {
+            return commonFragment61;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_62)) {
+            return commonFragment62;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_63)) {
+            return commonFragment63;
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_64)) {
+            return commonFragment64;
+        }else {
             return firstFragment;
         }
 
@@ -305,61 +355,61 @@ public class MainActivity extends BaseActivity {
         } else if (tabType == Constant.TYPE_TAB_EASY_CATE){
             switch (selectIndex) {
                 case 1:
-                    switchContentFragment(getCurrFragment(), commonFragment31, TAG_FRAG_FIFTH);
+                    switchContentFragment(getCurrFragment(), commonFragment31, TAG_FRAG_COMMON_31);
                     break;
                 case 2:
-                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_COMMON_32);
                     break;
                 case 3:
-                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_COMMON_33);
                     break;
                 case 4:
-                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_34);
                     break;
             }
         } else if (tabType == Constant.TYPE_APP_EASY_BEAUTY){
             switch (selectIndex) {
                 case 1:
-                    switchContentFragment(getCurrFragment(), commonFragment41, TAG_FRAG_FIFTH);
+                    switchContentFragment(getCurrFragment(), commonFragment41, TAG_FRAG_COMMON_41);
                     break;
                 case 2:
-                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_COMMON_42);
                     break;
                 case 3:
-                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_COMMON_43);
                     break;
                 case 4:
-                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_44);
                     break;
             }
         } else if (tabType == Constant.TYPE_TAB_EASY_FARM){
             switch (selectIndex) {
                 case 1:
-                    switchContentFragment(getCurrFragment(), commonFragment51, TAG_FRAG_FIFTH);
+                    switchContentFragment(getCurrFragment(), commonFragment51, TAG_FRAG_COMMON_51);
                     break;
                 case 2:
-                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_SIXTH);
+                    switchContentFragment(getCurrFragment(), sixthFragment, TAG_FRAG_COMMON_52);
                     break;
                 case 3:
-                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_SEVENTH);
+                    switchContentFragment(getCurrFragment(), seventhFragment, TAG_FRAG_COMMON_53);
                     break;
                 case 4:
-                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
+                    switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_54);
                     break;
             }
         } else if (tabType == Constant.TYPE_APP_EASY_FORUM){
             switch (selectIndex) {
                 case 1:
-                    switchContentFragment(getCurrFragment(), commonFragment61, TAG_FRAG_FIFTH);
+                    switchContentFragment(getCurrFragment(), commonFragment61, TAG_FRAG_COMMON_61);
                     break;
                 case 2:
-                    switchContentFragment(getCurrFragment(), commonFragment62, TAG_FRAG_SIXTH);
+                    switchContentFragment(getCurrFragment(), commonFragment62, TAG_FRAG_COMMON_62);
                     break;
                 case 3:
-                    switchContentFragment(getCurrFragment(), commonFragment63, TAG_FRAG_SEVENTH);
+                    switchContentFragment(getCurrFragment(), commonFragment63, TAG_FRAG_COMMON_63);
                     break;
                 case 4:
-                    switchContentFragment(getCurrFragment(), commonFragment64, TAG_FRAG_EIGHTH);
+                    switchContentFragment(getCurrFragment(), commonFragment64, TAG_FRAG_COMMON_64);
                     break;
             }
         }
@@ -555,7 +605,7 @@ public class MainActivity extends BaseActivity {
                     public void onResponse(Call<UploadResult> call, Response<UploadResult> response) {
                         Log.e("lsz", "上传成功");
 //                        mWebView.loadUrl("javascript:uploadSuccess()");
-                        EventBus.getDefault().post(new MessageEvent("上传成功"));
+                        EventBus.getDefault().post(new UploadSuccessEvent("上传成功"));
                     }
 
                     @Override
@@ -563,6 +613,37 @@ public class MainActivity extends BaseActivity {
                         Log.e("lsz", "上传失败");
                     }
                 });
+    }
+
+    private long exitTime = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                AppToast.makeText(getApplicationContext(), "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(LogOutEvent messageEvent) {
+        finish();
     }
 
 }

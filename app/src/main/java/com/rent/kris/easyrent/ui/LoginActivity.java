@@ -15,6 +15,7 @@ import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.event.EventManager;
+import com.rent.kris.easyrent.event.LogOutEvent;
 import com.rent.kris.easyrent.event.OnLoginEvent;
 import com.rent.kris.easyrent.prefs.AppPrefs;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
@@ -28,6 +29,8 @@ import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.ext.http.retrofit.api.NoneProgressSubscriber;
 import com.xw.ext.http.retrofit.api.error.ApiException;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -144,6 +147,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onNext(UserProfile student) {
                 dismissProgressDialog();
+                EventBus.getDefault().post(new LogOutEvent());
                 MainActivity.intentTo(LoginActivity.this);
                 finish();
             }

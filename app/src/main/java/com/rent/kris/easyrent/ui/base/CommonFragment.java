@@ -1,6 +1,5 @@
 package com.rent.kris.easyrent.ui.base;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,9 +19,8 @@ import android.widget.TextView;
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
-import com.rent.kris.easyrent.event.MessageEvent;
+import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
-import com.rent.kris.easyrent.ui.FifthFragment;
 import com.rent.kris.easyrent.util.JSBridge;
 import com.rent.kris.easyrent.web.WebViewSettings;
 import com.xw.common.prefs.LoginInfoPrefs;
@@ -166,7 +164,7 @@ public class CommonFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(MessageEvent messageEvent) {
+    public void Event(UploadSuccessEvent messageEvent) {
         if(mWebView != null){
             mWebView.loadUrl("javascript:uploadSuccess()");
         }

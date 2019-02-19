@@ -1,38 +1,25 @@
 package com.rent.kris.easyrent.ui.base;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.R;
-import com.rent.kris.easyrent.event.MessageEvent;
+import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.util.JSBridge;
-import com.rent.kris.easyrent.util.JavaAndJSBridge;
-import com.rent.kris.easyrent.web.WebViewHelper;
 import com.rent.kris.easyrent.web.WebViewSettings;
 
 import org.greenrobot.eventbus.EventBus;
@@ -154,7 +141,7 @@ public class BaseFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(MessageEvent messageEvent) {
+    public void Event(UploadSuccessEvent messageEvent) {
         if(mWebView != null){
             mWebView.loadUrl("javascript:uploadSuccess()");
         }

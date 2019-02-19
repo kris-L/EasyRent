@@ -164,6 +164,9 @@ public class FouthFragment extends BaseFragment {
                     Utils.GotoWebView(getActivity(),url);
                 }else{
                     LoginActivity.intentTo(getActivity());
+                    if (getActivity() != null){
+                        getActivity().finish();
+                    }
                 }
                 break;
 
