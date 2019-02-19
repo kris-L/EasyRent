@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
+import com.xw.common.prefs.LoginInfoPrefs;
 
 
 /**
@@ -30,11 +33,12 @@ public class ThirdFragment extends BaseFragment {
         return fragment;
     }
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_third, container, false);
-        return view;
+    public void initView(View view) {
+        tvTitle.setText("易租");
+        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/news.html"+
+                "?key="+ UserProfilePrefs.getInstance().getUserToken()+"&username="+
+                LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        mWebView.loadUrl(url);
     }
 }

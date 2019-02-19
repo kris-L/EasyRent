@@ -169,16 +169,15 @@ public class MainActivity extends BaseActivity {
         urlStr = "http://app.tit306.com/appa/bbs/";
         title = "论坛";
         commonFragment61 = CommonFragment.newInstance(urlStr,title);
-        urlStr = "http://app.tit306.com/appa/bbs/index.php/search";
-        title = "论坛";
+        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=forum&amp";
+        title = "搜索";
         commonFragment62 = CommonFragment.newInstance(urlStr,title);
-        urlStr = "http://app.tit306.com/appa/bbs/weibo";
-        title = "论坛";
+        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=edit&type=read&id=0&sortid=";
+        title = "唠叨";
         commonFragment63 = CommonFragment.newInstance(urlStr,title);
-        urlStr = "http://app.tit306.com/appa/bbs/index.php/article";
-        title = "论坛";
+        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=user";
+        title = "我的";
         commonFragment64 = CommonFragment.newInstance(urlStr,title);
-
 
 
         currentFragmentTag = TAG_FRAG_FIRST;

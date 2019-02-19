@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -17,6 +19,11 @@ import butterknife.OnClick;
  */
 
 public class LandlordActivity  extends BaseActivity {
+
+    @BindView(R.id.name_tv)
+    TextView name_tv;
+    @BindView(R.id.release_house_tv)
+    TextView release_house_tv;
 
     private Context mContext;
     public static void intentTo(Context context) {
@@ -43,9 +50,19 @@ public class LandlordActivity  extends BaseActivity {
     public String title = "";
     public String url = "";
 
-    @OnClick({R.id.go_renter_tv,R.id.my_appointment_ll,R.id.earnings_ll,R.id.housing_ll,R.id.tenant_ll,R.id.work_ll})
+    @OnClick({R.id.go_renter_tv,R.id.my_appointment_ll,R.id.earnings_ll,R.id.housing_ll,R.id.tenant_ll,
+            R.id.work_ll,R.id.release_house_tv})
     public void OnClickView(View view) {
         switch(view.getId()){
+            case R.id.release_house_tv:
+                intent = new Intent(this, WebViewActivity.class);
+                title = "";
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/fabufa1.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                intent.putExtra("url", url);
+                intent.putExtra("title", title);
+                startActivity(intent);
+                break;
+
             case R.id.go_renter_tv:
                 finish();
                 break;

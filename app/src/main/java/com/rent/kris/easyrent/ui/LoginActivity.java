@@ -73,8 +73,8 @@ public class LoginActivity extends BaseActivity {
         initPlatforms();
         if(!TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
             Log.e("lsz","key="+UserProfilePrefs.getInstance().getUserToken());
-            MainActivity.intentTo(LoginActivity.this);
-            finish();
+//            MainActivity.intentTo(LoginActivity.this);
+//            finish();
         }
     }
 
