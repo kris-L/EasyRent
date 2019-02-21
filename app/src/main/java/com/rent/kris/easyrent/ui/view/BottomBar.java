@@ -163,7 +163,7 @@ public class BottomBar extends LinearLayout {
 
         }else if(type == Constant.TYPE_APP_EASY_BEAUTY){
             tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
-            tab_first_text_tv.setText("农特产品");
+            tab_first_text_tv.setText("美容美发");
             tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
             tab_second_text_tv.setText(getResources().getText(R.string.merchandise_str));
             tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
@@ -194,10 +194,9 @@ public class BottomBar extends LinearLayout {
                     break;
             }
 
-
         }else if(type == Constant.TYPE_TAB_EASY_FARM){
             tab_first_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_home));
-            tab_first_text_tv.setText("美容美发");
+            tab_first_text_tv.setText("农特产品");
             tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
             tab_second_text_tv.setText(getResources().getText(R.string.merchandise_str));
             tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));

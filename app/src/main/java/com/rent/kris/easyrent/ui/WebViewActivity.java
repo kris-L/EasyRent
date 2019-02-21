@@ -209,6 +209,11 @@ public class WebViewActivity extends AppCompatActivity {
             });
 
         }
+
+        @Override
+        public void onModuleSelected(int index) {
+
+        }
     };
 
     private void showMoreDialog() {

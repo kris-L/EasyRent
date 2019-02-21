@@ -66,7 +66,7 @@ public class SettingActivity extends BaseActivity {
                 UserProfilePrefs.getInstance().saveUserToken("");
                 EventBus.getDefault().post(new LogOutEvent());
                 finish();
-                MainActivity.intentTo(this);
+                MainActivity.intentTo(this,1);
                 break;
 
             case R.id.change_password_ll:

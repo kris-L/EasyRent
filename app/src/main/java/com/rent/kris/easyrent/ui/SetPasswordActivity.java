@@ -40,7 +40,7 @@ public class SetPasswordActivity extends BaseActivity {
     public void OnClickView(View view) {
         switch(view.getId()){
             case R.id.next_tv:
-                MainActivity.intentTo(this);
+                MainActivity.intentTo(this,1);
                 finish();
                 break;
         }

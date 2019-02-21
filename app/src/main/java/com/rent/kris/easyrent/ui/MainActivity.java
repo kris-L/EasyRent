@@ -34,6 +34,7 @@ import com.rent.kris.easyrent.ui.dialog.SelectModuleDialog;
 import com.rent.kris.easyrent.ui.photopick.ImageInfo;
 import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
 import com.rent.kris.easyrent.ui.view.BottomBar;
+import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
 import com.rent.kris.easyrent.util.Base64Util;
 import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.RealPathUtil;
@@ -127,10 +128,12 @@ public class MainActivity extends BaseActivity {
 
     private String currentFragmentTag;
     private int tabType = Constant.TYPE_TAB_EASY_HOME;
-    private int selectIndex = 1;
+    private int mSelectIndex = 1;
+    private static final String KEY_DEFAULT_MODULE = "key_default_module";
 
-    public static void intentTo(Context context) {
+    public static void intentTo(Context context,int defaultModule) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(KEY_DEFAULT_MODULE,defaultModule);
         context.startActivity(intent);
     }
 
@@ -140,6 +143,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        if(intent != null){
+            tabType = intent.getIntExtra(KEY_DEFAULT_MODULE,1);
+        }
+
         EventBus.getDefault().register(this);
         initView();
     }
@@ -159,11 +167,12 @@ public class MainActivity extends BaseActivity {
         String urlStr = "http://app.tit306.com/appa/food/index.html";
         String title = "美食";
         commonFragment31 = CommonFragment.newInstance(urlStr,title);
-        urlStr = "http://app.tit306.com/appa/farmers/index.html";
-        title = "农产品";
-        commonFragment41 = CommonFragment.newInstance(urlStr,title);
         urlStr = "http://app.tit306.com/appa/beauty/index.html";
         title = "美容美发";
+        commonFragment41 = CommonFragment.newInstance(urlStr,title);
+
+        urlStr = "http://app.tit306.com/appa/farmers/index.html";
+        title = "农产品";
         commonFragment51 = CommonFragment.newInstance(urlStr,title);
 
         urlStr = "http://app.tit306.com/appa/bbs/";
@@ -181,44 +190,64 @@ public class MainActivity extends BaseActivity {
 
 
         currentFragmentTag = TAG_FRAG_FIRST;
-        transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
+        if(tabType > 6){
+            transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
+        }else{
+            transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
+            mBottomBar.setBottonTabView(tabType, mSelectIndex);
+            switchContent(tabType, mSelectIndex);
+        }
 
         mBottomBar.setOnBottombarOnclick(new BottomBar.OnBottonbarClick() {
             @Override
             public void onFirstClick() {
-                selectIndex = 1;
-                mBottomBar.setBottonTabView(tabType, selectIndex);
-                switchContent(tabType, selectIndex);
+                mSelectIndex = 1;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchContent(tabType, mSelectIndex);
             }
 
             @Override
             public void onSecondClick() {
-                selectIndex = 2;
-                mBottomBar.setBottonTabView(tabType, selectIndex);
-                switchContent(tabType, selectIndex);
+                mSelectIndex = 2;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchContent(tabType, mSelectIndex);
             }
 
             @Override
             public void onThirdClick() {
-                selectIndex = 3;
-                mBottomBar.setBottonTabView(tabType, selectIndex);
-                switchContent(tabType, selectIndex);
+                mSelectIndex = 3;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchContent(tabType, mSelectIndex);
             }
 
             @Override
             public void onFouthClick() {
-                selectIndex = 4;
-                mBottomBar.setBottonTabView(tabType, selectIndex);
-                switchContent(tabType, selectIndex);
+                mSelectIndex = 4;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchContent(tabType, mSelectIndex);
             }
 
             @Override
             public void onCenterClick() {
-                showSelectDialog();
+//                showSelectDialog();
+                showSelectPopWindow();
             }
         });
     }
 
+
+    private void showSelectPopWindow() {
+        PopupMenuUtil.getInstance().showUp(mContext, mCenterImage, new PopupMenuUtil.OnButtonClick() {
+
+            @Override
+            public void onViewClick(int position) {
+                tabType = position + 1;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchBottomTab();
+                switchContent(tabType, mSelectIndex);
+            }
+        });
+    }
 
 
     public SelectModuleDialog dialog;
@@ -228,37 +257,10 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onImageClick(int position) {
                 dialog.dismiss();
-                if(position == 0){
-                    tabType = Constant.TYPE_TAB_EASY_HOME;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }else if(position == 1){
-                    tabType = Constant.TYPE_APP_EASY_LIFE;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }else if(position == 2){
-                    tabType = Constant.TYPE_TAB_EASY_CATE;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }else if(position == 3){
-                    tabType = Constant.TYPE_APP_EASY_BEAUTY;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }else if(position == 4){
-                    tabType = Constant.TYPE_TAB_EASY_FARM;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }else if(position == 5){
-                    tabType = Constant.TYPE_APP_EASY_FORUM;
-                    mBottomBar.setBottonTabView(tabType, selectIndex);
-                    switchBottomTab();
-                    switchContent(tabType, selectIndex);
-                }
+                tabType = position + 1;
+                mBottomBar.setBottonTabView(tabType, mSelectIndex);
+                switchBottomTab();
+                switchContent(tabType, mSelectIndex);
             }
         });
         dialog.show();

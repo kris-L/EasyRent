@@ -123,7 +123,7 @@ public class FouthFragment extends BaseFragment {
                 break;
 
             case R.id.share_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html";
+                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/share.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html style="background: url(img/back.png)">
+
+<head>
+    <title>Examples Easy Silder</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="jquery.easy_slides.css" rel="stylesheet" type="text/css" />
+    <script src="jquery.min.js"></script>
+    <script src="jquery.easy_slides.js"></script>
+
+</head>
+
+<body>
+	
+	<div class="wrapper" >
+		<div class="active1">
+			<!-- <img src="./img/a.png" width="100%" class="a1" > -->
+			<img src="./img/light.png" width="90%" class="a2">
+		</div>
+		<div class="slider slider_circle_10" style="top: 55vw;">
+        <div>
+			<img src="./img/1.png" width="100%" height="100%" onclick="change(0);">
+		</div>
+        <div>
+			<img src="./img/2.png" width="100%" height="100%" onclick="change(4);">
+		</div>
+        <div>
+			<img src="./img/3.png" width="100%" height="100%" onclick="change(1);">
+		</div>
+		<div>
+			<img src="./img/4.png" width="100%" height="100%" onclick="change(6);">
+		</div>
+		<div>
+			<img src="./img/5.png" width="100%" height="100%" onclick="change(7);">
+		</div>
+		<div>
+			<img src="./img/6.png" width="100%" height="100%" onclick="change(2);">
+		</div>
+		<div>
+			<img src="./img/7.png" width="100%" height="100%" onclick="change(5);">
+		</div>
+		<div>
+			<img src="./img/8.png" width="100%" height="100%" onclick="change(8);">
+		</div>
+		<div>
+			<img src="./img/9.png" width="100%" height="100%" onclick="change(3);">
+		</div>
+        <!--<div class="next_button"></div>
+        <div class="prev_button"></div>-->
+    </div>
+	</div>
+    
+    <br>
+
+    <script>
+    	function mobiletype(){
+			var phonetype=3;
+
+			if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+				phonetype =1;
+			} 
+
+			if (/(Android)/i.test(navigator.userAgent)) {
+				phonetype=2;
+			}
+
+			return phonetype;
+		}
+
+    	function change(type)
+    	{
+    		//var jsonarr="{\"index\":"+type+"}";
+    		if (mobiletype() == 1) {
+				try{        
+		
+					window.webkit.messageHandlers.moduleSelectedAtIndex.postMessage(type);
+				}catch(e){
+					alert(e.message);
+				}
+         	}
+         
+			if(mobiletype() == 2){
+				try{
+					window.App.moduleSelectedAtIndex(type);
+				}catch(e){
+					alert(e.message);
+				}
+			}
+	    }
+
+        $(document).ready(function() {
+            $('.slider_circle_10').EasySlides({
+                'autoplay': false,
+                'show': 9
+            })
+            setTimeout(function() {
+            	$('.a1').fadeIn(300);
+            	$('.a2').fadeIn(300);
+            } , 300)
+        });
+		
+    </script>
+</body>
+
+</html>

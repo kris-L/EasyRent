@@ -191,7 +191,8 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onNext(UserProfile student) {
                 dismissProgressDialog();
-                MainActivity.intentTo(mContext);
+                MainActivity.intentTo(mContext,1);
+                AppToast.makeText(mContext, "注册成功");
                 finish();
             }
         });

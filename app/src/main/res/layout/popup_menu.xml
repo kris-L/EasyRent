@@ -1,99 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:background="#00000000"
     >
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="25dip"-->
+    <!--android:layout_marginRight="25dip"-->
+    <!--android:gravity="bottom|center_horizontal"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_marginTop="50dip"-->
+    <!--android:layout_marginBottom="220dip"-->
+    <!--&gt;-->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dip"
         android:layout_marginRight="25dip"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dip"
-        android:layout_marginBottom="20dip"
-        >
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/easy_rent_ll"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginRight="15dip"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:id="@+id/cate_memu_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="@drawable/shape_circle_orange"
-            >
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="30dip"
-                android:layout_height="30dip"
-                android:src="@drawable/icon_tab_home_pre"
-                />
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_home_pre" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:text="易租"
+                android:text="美食餐饮"
                 android:textColor="@color/circle_orange_bg"
-                android:textSize="16dp"/>
+                android:textSize="12dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hairdressing_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:background="@drawable/shape_circle_orange"
+            android:gravity="center"
+
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_family_pre" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="美容美发"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/easy_life_ll"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/easy_rent_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="50dip"
             android:background="@drawable/shape_circle_orange"
-            >
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="30dip"
-                android:layout_height="30dip"
-                android:src="@drawable/icon_tab_family_pre"
-                />
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_home_pre" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:text="易生活"
+                android:text="士多百货"
                 android:textColor="@color/circle_orange_bg"
-                android:textSize="16dp"/>
+                android:textSize="12dp" />
         </LinearLayout>
-    </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/farm_produce_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="90dip"
+            android:layout_marginTop="50dip"
+            android:layout_toRightOf="@+id/easy_life_ll"
+            android:background="@drawable/shape_circle_orange"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/pop_rl_click"
-        android:layout_width="wrap_content"
-        android:layout_height="55dip"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:visibility="gone"
-        >
+            <ImageView
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_family_pre" />
 
-        <ImageView
-            android:layout_width="45dip"
-            android:layout_height="45dip"
-            android:layout_centerInParent="true"
-            android:src="@drawable/bg"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="农特产品"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="12dp" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/pop_iv_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/add"/>
-    </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/easy_rent_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="100dip"
+            android:background="@drawable/shape_circle_orange"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_home_pre" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="易租逸居"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/maker_ll"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="180dip"
+            android:layout_marginTop="100dip"
+            android:layout_toRightOf="@+id/easy_rent_ll"
+            android:background="@drawable/shape_circle_orange"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/icon_tab_family_pre" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:text="创客中心"
+                android:textColor="@color/circle_orange_bg"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

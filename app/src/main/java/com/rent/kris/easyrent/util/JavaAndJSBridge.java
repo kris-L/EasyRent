@@ -27,6 +27,7 @@ public class JavaAndJSBridge {
         void uploadImage(String type,String sonpath,String newname,String timestamp);
         void onLoginNotify();
         void onCallPhone(String phone);
+        void onModuleSelected(int index);
     }
 
 
@@ -42,6 +43,14 @@ public class JavaAndJSBridge {
             jsListener.onLoginNotify();
         }
     }
+
+    @JavascriptInterface
+    public void moduleSelectedAtIndex(int index) {
+        if(jsListener != null){
+            jsListener.onModuleSelected(index);
+        }
+    }
+
 
     @JavascriptInterface
     public void uploadImage(String jsonstr) {

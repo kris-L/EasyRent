@@ -148,7 +148,8 @@ public class LoginActivity extends BaseActivity {
             public void onNext(UserProfile student) {
                 dismissProgressDialog();
                 EventBus.getDefault().post(new LogOutEvent());
-                MainActivity.intentTo(LoginActivity.this);
+                MainActivity.intentTo(LoginActivity.this,1);
+                AppToast.makeText(LoginActivity.this, "登录成功");
                 finish();
             }
         });

@@ -1,5 +1,6 @@
 package com.rent.kris.easyrent.ui.view;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,6 +23,9 @@ public class PopupMenuUtil implements View.OnClickListener {
 
     private static final String TAG = "PopupMenuUtil";
 
+    int[] centreLocation = new int[2];
+
+
     public static PopupMenuUtil getInstance() {
         return MenuUtilHolder.INSTANCE;
     }
@@ -32,8 +36,7 @@ public class PopupMenuUtil implements View.OnClickListener {
     }
 
     public interface OnButtonClick {
-        void onRentClick();
-        void onLifeClick();
+        void onViewClick(int index);
     }
 
     @Override
@@ -41,19 +44,44 @@ public class PopupMenuUtil implements View.OnClickListener {
         switch (v.getId()){
             case R.id.easy_rent_ll:
                 if(mOnButtonClick != null){
-                    mOnButtonClick.onRentClick();
+                    mOnButtonClick.onViewClick(0);
                 }
                 _rlClickAction();
                 break;
 
             case R.id.easy_life_ll:
                 if(mOnButtonClick != null){
-                    mOnButtonClick.onLifeClick();
+                    mOnButtonClick.onViewClick(1);
                 }
                 _rlClickAction();
                 break;
 
+            case R.id.cate_memu_ll:
+                if(mOnButtonClick != null){
+                    mOnButtonClick.onViewClick(2);
+                }
+                _rlClickAction();
+                break;
+            case R.id.hairdressing_ll:
+                if(mOnButtonClick != null){
+                    mOnButtonClick.onViewClick(3);
+                }
+                _rlClickAction();
+                break;
+            case R.id.farm_produce_ll:
+                if(mOnButtonClick != null){
+                    mOnButtonClick.onViewClick(4);
+                }
+                _rlClickAction();
+                break;
+            case R.id.maker_ll:
+                if(mOnButtonClick != null){
+                    mOnButtonClick.onViewClick(5);
+                }
+                _rlClickAction();
+                break;
         }
+
     }
 
     private static class MenuUtilHolder {
@@ -63,9 +91,9 @@ public class PopupMenuUtil implements View.OnClickListener {
     private View rootVew;
     private PopupWindow popupWindow;
 
-    private RelativeLayout rlClick;
-    private ImageView ivBtn;
-    private LinearLayout llTest1, llTest2;
+//    private RelativeLayout rlClick;
+//    private ImageView ivBtn;
+    private LinearLayout llTest1, llTest2,llTest3, llTest4,llTest5, llTest6;
 
     /**
      * 动画执行的 属性值数组
@@ -124,14 +152,22 @@ public class PopupMenuUtil implements View.OnClickListener {
      * 初始化 view
      */
     private void initLayout(Context context) {
-        rlClick = (RelativeLayout) rootVew.findViewById(R.id.pop_rl_click);
-        ivBtn = (ImageView) rootVew.findViewById(R.id.pop_iv_img);
+//        rlClick = (RelativeLayout) rootVew.findViewById(R.id.pop_rl_click);
+//        ivBtn = (ImageView) rootVew.findViewById(R.id.pop_iv_img);
         llTest1 = (LinearLayout) rootVew.findViewById(R.id.easy_rent_ll);
         llTest2 = (LinearLayout) rootVew.findViewById(R.id.easy_life_ll);
+        llTest3 = (LinearLayout) rootVew.findViewById(R.id.cate_memu_ll);
+        llTest4 = (LinearLayout) rootVew.findViewById(R.id.hairdressing_ll);
+        llTest5 = (LinearLayout) rootVew.findViewById(R.id.farm_produce_ll);
+        llTest6 = (LinearLayout) rootVew.findViewById(R.id.maker_ll);
 
-        rlClick.setOnClickListener(this);
+//        rlClick.setOnClickListener(this);
         llTest1.setOnClickListener(this);
         llTest2.setOnClickListener(this);
+        llTest3.setOnClickListener(this);
+        llTest4.setOnClickListener(this);
+        llTest5.setOnClickListener(this);
+        llTest6.setOnClickListener(this);
 
     }
 
@@ -180,13 +216,29 @@ public class PopupMenuUtil implements View.OnClickListener {
      * 刚打开popupWindow 执行的动画
      */
     private void _openPopupWindowAction() {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(ivBtn, "rotation", 0f, 135f);
-        objectAnimator.setDuration(200);
-        objectAnimator.start();
+//        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(ivBtn, "rotation", 0f, 135f);
+//        objectAnimator.setDuration(200);
+//        objectAnimator.start();
 
-        _startAnimation(llTest1, 500, animatorProperty);
-        _startAnimation(llTest2, 430, animatorProperty);
+//      拿到终点控件的绝对坐标
+        int [] locationEnd = new int[2];
+        llTest1.getLocationInWindow(locationEnd);
+        int centreX = centreLocation[0];
+        int centreY = centreLocation[1];
 
+        float animatorPropertyX [] = new float[]{100,50, 10, 0};
+        float animatorPropertyX2 [] = new float[]{-100,-50, -10, 0};
+//        ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(llTest1, "translationX", animatorPropertyX);
+//        ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(llTest1, "translationY", animatorProperty);
+//        AnimatorSet animatorSet = new AnimatorSet();
+//        animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
+//        animatorSet.setDuration(500);
+//        animatorSet.start();
+
+        _startAnimation(llTest1, 500, animatorPropertyX);
+        _startAnimation(llTest2, 500, animatorPropertyX);
+        _startAnimation(llTest5, 500, animatorPropertyX2);
+        _startAnimation(llTest6, 500, animatorPropertyX2);
     }
 
 
@@ -194,24 +246,10 @@ public class PopupMenuUtil implements View.OnClickListener {
      * 关闭 popupWindow执行的动画
      */
     public void _rlClickAction() {
-        if (ivBtn != null && rlClick != null) {
+        _closeAnimation(llTest1, 300, top);
+        _closeAnimation(llTest2, 200, top);
+        _close();
 
-            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(ivBtn, "rotation", 135f, 0f);
-            objectAnimator.setDuration(300);
-            objectAnimator.start();
-
-            _closeAnimation(llTest1, 300, top);
-            _closeAnimation(llTest2, 200, top);
-
-
-            rlClick.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    _close();
-                }
-            }, 300);
-
-        }
     }
 
 
@@ -235,10 +273,9 @@ public class PopupMenuUtil implements View.OnClickListener {
         if (popupWindow != null && !popupWindow.isShowing()) {
             rootVew.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             popupHeight = rootVew.getMeasuredHeight();
-            int[] location = new int[2];
-            v.getLocationOnScreen(location);
+            v.getLocationOnScreen(centreLocation);
 //            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 0, location[1] - measuredHeight);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 0, location[1] - popupHeight);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 0, centreLocation[1] - popupHeight);
             _openPopupWindowAction();
         }
 
@@ -288,9 +325,18 @@ public class PopupMenuUtil implements View.OnClickListener {
      * @param distance 执行的轨迹数组
      */
     private void _startAnimation(View view, int duration, float[] distance) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "translationY", distance);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "translationX", distance);
         anim.setDuration(duration);
         anim.start();
+    }
+
+    private void _startAnimation(View view, int duration,float[] distanceX, float[] distanceY) {
+        ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(view, "translationX", distanceX);
+        ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(view, "translationY", distanceY);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
+        animatorSet.setDuration(duration);
+        animatorSet.start();
     }
 
 
