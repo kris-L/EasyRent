@@ -91,7 +91,7 @@ public class AppModel extends ApiModel<Api> {
     public void register(final String userName, final String password,String code, Subscriber<UserProfile> subscriber) {
         LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
         Map<String, String> params = new HashMap<>();
-        params.put("username", userName);
+        params.put("phone", userName);
         params.put("password", password);
         params.put("captcha", code);
         params.put("client", "wap");

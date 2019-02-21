@@ -86,10 +86,21 @@ public class LoadingActivity extends AppCompatActivity {
         });
         mWebView = (WebView) findViewById(R.id.m_web_view);
         mWebView.setWebViewClient(mWebViewClient);
+        mWebView.getSettings().setUseWideViewPort(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // chromium, enable hardware acceleration
+            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            // older android version, disable hardware acceleration
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+
+
         WebViewSettings.config(mWebView.getSettings());
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, this, jsListener), "App");
 
         String url = "file:///android_asset/index.html";
