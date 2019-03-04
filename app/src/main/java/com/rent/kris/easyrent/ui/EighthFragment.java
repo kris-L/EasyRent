@@ -2,6 +2,8 @@ package com.rent.kris.easyrent.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +45,12 @@ public class EighthFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         tvTitle.setText("我的商城");
-        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/member.html"+
-                "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
-                LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/member.html";
+        if(!TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
+            url = url + "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
+                    LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        }
+        Log.e("EighthFragment","url="+url);
         mWebView.loadUrl(url);
     }
 

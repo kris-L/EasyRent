@@ -1,16 +1,25 @@
 package com.rent.kris.easyrent.api;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.entity.CommonEntity;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
+import com.rent.kris.easyrent.ui.MainActivity;
+import com.rent.kris.easyrent.ui.WebViewActivity;
 import com.rent.kris.easyrent.util.LoginHelper;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.dialog.lib.WarnDialog;
 import com.xw.ext.http.retrofit.api.ApiModel;
@@ -18,12 +27,16 @@ import com.xw.ext.http.retrofit.api.error.ApiException;
 import com.xw.ext.http.retrofit.api.error.ApiOnErrorFunc;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.functions.Consumer;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -203,15 +216,65 @@ public class AppModel extends ApiModel<Api> {
         }
     }
 
+    public void uploadPicTest(String key,String username,String imgPath,String type,
+                          String sonpath,String newname, String timestamp, Subscriber<UploadResult> subscriber) {
+        //1.创建MultipartBody.Builder对象
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);//表单类型
+        Log.e("lsz","imgPath="+imgPath);
+        imgPath = imgPath.replace("file:///", "");
+        Log.e("lsz","imgPath="+imgPath);
+        //2.获取图片，创建请求体
+        File file = new File(imgPath);
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(file);
+            is.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
+
+        //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
+        builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("username", username);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("type", type);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
+        builder.addFormDataPart("file",file.getName(),body); //添加图片数据，body创建的请求体
+
+        //4.创建List<MultipartBody.Part> 集合，
+        //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody
+        //  再调用MultipartBody的parts()方法返回MultipartBody.Part集合
+        List<MultipartBody.Part> parts = builder.build().parts();
+        //5.最后进行HTTP请求，传入parts即可
+        Call<UploadResult> uploadPic = api().myUpload(parts);
+
+        api().uploadPic(parts)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+
+    }
+
+
     public void uploadPic(String key,String username,String imgPath,String type,
                           String sonpath,String newname, String timestamp,
                           Callback<UploadResult> subscriber) {
+        if(TextUtils.isEmpty(timestamp)){
+            timestamp = "";
+        }
         //1.创建MultipartBody.Builder对象
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);//表单类型
        //2.获取图片，创建请求体
         File file = new File(imgPath);
-        RequestBody body=RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
+        RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
 
         //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
         builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
@@ -234,34 +297,42 @@ public class AppModel extends ApiModel<Api> {
 
     public void uploadPicS(String key,String username,List<String> pathList,String type,
                           String sonpath,String newname, String timestamp,
-                          Callback<UploadResult> subscriber) {
-        //1.创建MultipartBody.Builder对象
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);//表单类型
+                           Subscriber<UploadResult> subscriber) {
+            //1.创建MultipartBody.Builder对象
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM);//表单类型
 
-        //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
-        builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("username", username);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("type", type);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
-        builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
-        for (int i=0;i<pathList.size();i++){
-            //2.获取图片，创建请求体
-            File file = new File(pathList.get(i));
-            if(file != null){
-                RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
-                builder.addFormDataPart("file_"+i,file.getName(),body); //添加图片数据，body创建的请求体
+            //3.调用MultipartBody.Builder的addFormDataPart()方法添加表单数据
+            builder.addFormDataPart("key", key);//传入服务器需要的key，和相应value值
+            builder.addFormDataPart("username", username);//传入服务器需要的key，和相应value值
+            builder.addFormDataPart("type", type);//传入服务器需要的key，和相应value值
+            builder.addFormDataPart("sonpath", sonpath);//传入服务器需要的key，和相应value值
+            builder.addFormDataPart("newname", newname);//传入服务器需要的key，和相应value值
+            builder.addFormDataPart("timestamp", timestamp);//传入服务器需要的key，和相应value值
+            for (int i=0;i<pathList.size();i++){
+                String imgPath = pathList.get(i);
+                imgPath = imgPath.replace("file:///", "");
+                //2.获取图片，创建请求体
+                File file = new File(imgPath);
+                if(file != null){
+                    RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);//表单类型
+                    builder.addFormDataPart("file_"+i,file.getName(),body); //添加图片数据，body创建的请求体
+                }
             }
-        }
+            //4.创建List<MultipartBody.Part> 集合，
+            //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody
+            //  再调用MultipartBody的parts()方法返回MultipartBody.Part集合
+            List<MultipartBody.Part> parts = builder.build().parts();
+            //5.最后进行HTTP请求，传入parts即可
+//            Call<UploadResult> uploadPic = api().myUploadS(parts);
+//            uploadPic.enqueue(subscriber);
 
-        //4.创建List<MultipartBody.Part> 集合，
-        //  调用MultipartBody.Builder的build()方法会返回一个新创建的MultipartBody
-        //  再调用MultipartBody的parts()方法返回MultipartBody.Part集合
-        List<MultipartBody.Part> parts = builder.build().parts();
-        //5.最后进行HTTP请求，传入parts即可
-        Call<UploadResult> uploadPic = api().myUploadS(parts);
-        uploadPic.enqueue(subscriber);
+            api().myUploadS(parts)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+
     }
 
 

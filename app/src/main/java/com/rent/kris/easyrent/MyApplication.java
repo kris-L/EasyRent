@@ -40,7 +40,7 @@ public class MyApplication extends MultiDexApplication {
         UMConfigure.init(this,"5b4ca2aab27b0a51c0000306"
                 ,"umeng", UMConfigure.DEVICE_TYPE_PHONE,"");
 
-   //各个平台的配置，建议放在全局Application或者程序入口
+        //各个平台的配置，建议放在全局Application或者程序入口
         //微信
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         //新浪微博

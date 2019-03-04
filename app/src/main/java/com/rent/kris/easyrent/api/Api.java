@@ -51,8 +51,9 @@ public interface Api {
     Observable<MyApiResponse<CommonEntity>> getCode(@Body Map<String, String> params);
 
 
+    @Multipart
     @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
-    Call<ResponseBody> uploadPic(@QueryMap Map<String,String> params, @Part MultipartBody.Part file);
+    Observable<UploadResult> uploadPic(@Part List<MultipartBody.Part> partLis);
 
     @Multipart                  //这里用Multipart
     @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
@@ -60,6 +61,6 @@ public interface Api {
 
     @Multipart                  //这里用Multipart
     @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadWeixiu")
-    Call<UploadResult> myUploadS(@Part List<MultipartBody.Part> partLis);
+    Observable<UploadResult> myUploadS(@Part List<MultipartBody.Part> partLis);
 
 }

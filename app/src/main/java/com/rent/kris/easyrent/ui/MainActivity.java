@@ -3,10 +3,13 @@ package com.rent.kris.easyrent.ui;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,16 +23,20 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.google.gson.stream.MalformedJsonException;
+import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.adapter.SelectModuleAdapter;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.entity.UploadResult;
+import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.event.LogOutEvent;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.ui.base.CommonFragment;
+import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
 import com.rent.kris.easyrent.ui.dialog.SelectModuleDialog;
 import com.rent.kris.easyrent.ui.photopick.ImageInfo;
 import com.rent.kris.easyrent.ui.photopick.PhotoPickActivity;
@@ -41,17 +48,24 @@ import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
+import com.xw.ext.http.retrofit.api.NoneProgressSubscriber;
+import com.xw.ext.http.retrofit.api.error.ApiException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,9 +145,9 @@ public class MainActivity extends BaseActivity {
     private int mSelectIndex = 1;
     private static final String KEY_DEFAULT_MODULE = "key_default_module";
 
-    public static void intentTo(Context context,int defaultModule) {
+    public static void intentTo(Context context, int defaultModule) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(KEY_DEFAULT_MODULE,defaultModule);
+        intent.putExtra(KEY_DEFAULT_MODULE, defaultModule);
         context.startActivity(intent);
     }
 
@@ -144,8 +158,8 @@ public class MainActivity extends BaseActivity {
         mContext = this;
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        if(intent != null){
-            tabType = intent.getIntExtra(KEY_DEFAULT_MODULE,1);
+        if (intent != null) {
+            tabType = intent.getIntExtra(KEY_DEFAULT_MODULE, 1);
         }
 
         EventBus.getDefault().register(this);
@@ -166,33 +180,33 @@ public class MainActivity extends BaseActivity {
 
         String urlStr = "http://app.tit306.com/appa/food/index.html";
         String title = "美食";
-        commonFragment31 = CommonFragment.newInstance(urlStr,title);
+        commonFragment31 = CommonFragment.newInstance(urlStr, title);
         urlStr = "http://app.tit306.com/appa/beauty/index.html";
         title = "美容美发";
-        commonFragment41 = CommonFragment.newInstance(urlStr,title);
+        commonFragment41 = CommonFragment.newInstance(urlStr, title);
 
         urlStr = "http://app.tit306.com/appa/farmers/index.html";
         title = "农产品";
-        commonFragment51 = CommonFragment.newInstance(urlStr,title);
+        commonFragment51 = CommonFragment.newInstance(urlStr, title);
 
         urlStr = "http://app.tit306.com/appa/bbs/";
         title = "论坛";
-        commonFragment61 = CommonFragment.newInstance(urlStr,title);
+        commonFragment61 = CommonFragment.newInstance(urlStr, title);
         urlStr = "http://app.tit306.com/appa/bbs/index.php?c=forum&amp";
         title = "搜索";
-        commonFragment62 = CommonFragment.newInstance(urlStr,title);
+        commonFragment62 = CommonFragment.newInstance(urlStr, title);
         urlStr = "http://app.tit306.com/appa/bbs/index.php?c=edit&type=read&id=0&sortid=";
         title = "唠叨";
-        commonFragment63 = CommonFragment.newInstance(urlStr,title);
+        commonFragment63 = CommonFragment.newInstance(urlStr, title);
         urlStr = "http://app.tit306.com/appa/bbs/index.php?c=user";
         title = "我的";
-        commonFragment64 = CommonFragment.newInstance(urlStr,title);
+        commonFragment64 = CommonFragment.newInstance(urlStr, title);
 
 
         currentFragmentTag = TAG_FRAG_FIRST;
-        if(tabType > 6){
+        if (tabType > 6) {
             transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
-        }else{
+        } else {
             transaction.add(fragmentContainerId(), firstFragment, TAG_FRAG_FIRST).commit();
             mBottomBar.setBottonTabView(tabType, mSelectIndex);
             switchContent(tabType, mSelectIndex);
@@ -251,8 +265,9 @@ public class MainActivity extends BaseActivity {
 
 
     public SelectModuleDialog dialog;
+
     private void showSelectDialog() {
-         dialog = new SelectModuleDialog(this,tabType,new SelectModuleAdapter.OnItemViewClickListener() {
+        dialog = new SelectModuleDialog(this, tabType, new SelectModuleAdapter.OnItemViewClickListener() {
 
             @Override
             public void onImageClick(int position) {
@@ -292,7 +307,7 @@ public class MainActivity extends BaseActivity {
             return seventhFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_34)) {
             return eighthFragment;
-        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_41)) {
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_41)) {
             return commonFragment41;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_42)) {
             return sixthFragment;
@@ -300,7 +315,7 @@ public class MainActivity extends BaseActivity {
             return seventhFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_44)) {
             return eighthFragment;
-        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_51)) {
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_51)) {
             return commonFragment51;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_52)) {
             return sixthFragment;
@@ -308,7 +323,7 @@ public class MainActivity extends BaseActivity {
             return seventhFragment;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_54)) {
             return eighthFragment;
-        }else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_61)) {
+        } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_61)) {
             return commonFragment61;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_62)) {
             return commonFragment62;
@@ -316,7 +331,7 @@ public class MainActivity extends BaseActivity {
             return commonFragment63;
         } else if (TextUtils.equals(currentFragmentTag, TAG_FRAG_COMMON_64)) {
             return commonFragment64;
-        }else {
+        } else {
             return firstFragment;
         }
 
@@ -353,7 +368,7 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_EIGHTH);
                     break;
             }
-        } else if (tabType == Constant.TYPE_TAB_EASY_CATE){
+        } else if (tabType == Constant.TYPE_TAB_EASY_CATE) {
             switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), commonFragment31, TAG_FRAG_COMMON_31);
@@ -368,7 +383,7 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_34);
                     break;
             }
-        } else if (tabType == Constant.TYPE_APP_EASY_BEAUTY){
+        } else if (tabType == Constant.TYPE_APP_EASY_BEAUTY) {
             switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), commonFragment41, TAG_FRAG_COMMON_41);
@@ -383,7 +398,7 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_44);
                     break;
             }
-        } else if (tabType == Constant.TYPE_TAB_EASY_FARM){
+        } else if (tabType == Constant.TYPE_TAB_EASY_FARM) {
             switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), commonFragment51, TAG_FRAG_COMMON_51);
@@ -398,7 +413,7 @@ public class MainActivity extends BaseActivity {
                     switchContentFragment(getCurrFragment(), eighthFragment, TAG_FRAG_COMMON_54);
                     break;
             }
-        } else if (tabType == Constant.TYPE_APP_EASY_FORUM){
+        } else if (tabType == Constant.TYPE_APP_EASY_FORUM) {
             switch (selectIndex) {
                 case 1:
                     switchContentFragment(getCurrFragment(), commonFragment61, TAG_FRAG_COMMON_61);
@@ -494,11 +509,79 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public String typeStr ="";
-    public String sonpathStr="";
-    public String newnameStr="";
-    public String timestampStr="";
+    public String typeStr = "";
+    public String sonpathStr = "";
+    public String newnameStr = "";
+    public String timestampStr = "";
     private ArrayList<ImageInfo> pickImages = new ArrayList<>();
+
+    public void uploadImage(String type, String sonpath, String newname, String timestamp) {
+        typeStr = type;
+        sonpathStr = sonpath;
+        newnameStr = newname;
+        timestampStr = timestamp;
+        showMoreDialog();
+    }
+
+    private void showMoreDialog() {
+        ExamineMoreDialog dialog = new ExamineMoreDialog(this);
+        dialog.setOnItemClickListener(new ExamineMoreDialog.onItemClickListener() {
+            @Override
+            public void onTakePhotos() {
+                onMakePhoto();
+            }
+
+            @Override
+            public void onPhotoAlbum() {
+                onPickPhoto();
+            }
+        });
+        dialog.show();
+    }
+
+    public void onMakePhoto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new RxPermissions(MainActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+//                                try {
+//                                    photoUri = TakePhotoUtils.takePhoto(WebViewActivity.this, REQUEST_TAKE_PHOTO);
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+                        } else {
+                            Toast.makeText(MainActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void onPickPhoto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new RxPermissions(MainActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                            startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                        } else {
+                            Toast.makeText(MainActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     public void uploadImages(String type, String sonpath, String newname, String timestamp) {
         typeStr = type;
@@ -521,20 +604,21 @@ public class MainActivity extends BaseActivity {
 
     //去系统相册
     public void pickPhoto() {
-        new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-//                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//                    startActivityForResult(intent, REQUEST_PICK_IMAGE);
-
-                    Intent intent = new Intent(MainActivity.this, PhotoPickActivity.class);
-                    intent.putExtra(PhotoPickActivity.EXTRA_MAX, PHOTO_MAX_COUNT);
-                    startActivityForResult(intent, MainActivity.RESULT_TAKE_IMAGE1);
-                } else {
-                    Toast.makeText(MainActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
-                }
+            public void run() {
+                new RxPermissions(MainActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            Intent intent = new Intent(MainActivity.this, PhotoPickActivity.class);
+                            intent.putExtra(PhotoPickActivity.EXTRA_MAX, PHOTO_MAX_COUNT);
+                            startActivityForResult(intent, MainActivity.RESULT_TAKE_IMAGE1);
+                        } else {
+                            Toast.makeText(MainActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -553,7 +637,7 @@ public class MainActivity extends BaseActivity {
                     filePath = RealPathUtil.getRealPathFromURI(this, uri);
                 }
                 List<String> pathList = new ArrayList<>();
-                    pathList.add(filePath);
+                pathList.add(filePath);
                 uploadPicS(pathList);
 //                mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + pickPhotoName + "\',\'" + jsonObject + "\')");
             }
@@ -566,15 +650,9 @@ public class MainActivity extends BaseActivity {
             jsonObject.addProperty("someWord", someWord);
 //            mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + funcName + "\',\'" + jsonObject + "\')");
 
-        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK && null != photoFileName) {
-            //拍照回来
-            Log.d("WebViewActivity1", photoFileName);
-            String base64Image = Base64Util.encodeBase64ImageFile(photoFileName);
-            Log.d("WebViewActivity2", base64Image);
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("image64", base64Image);
-//            mWebView.loadUrl("javascript:sdk_nativeCallback(\'" + takePhotoName + "\',\'" + jsonObject + "\')");
-        }else if(requestCode == RESULT_TAKE_IMAGE1 ){
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            saveCameraImage(data);
+        } else if (requestCode == RESULT_TAKE_IMAGE1) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
@@ -585,7 +663,7 @@ public class MainActivity extends BaseActivity {
                     }
                     uploadPicS(pathList);
                 } catch (Exception e) {
-                    Log.e("lsz",e+"");
+                    Log.e("lsz", e + "");
                 }
             }
         }
@@ -601,22 +679,27 @@ public class MainActivity extends BaseActivity {
         String userName = LoginInfoPrefs.getInstance(this).getUserName();
         AppModel.model().uploadPicS(key, userName,
                 pathList, typeStr, sonpathStr, newnameStr, timestampStr,
-                new Callback<UploadResult>() {
+                new NoneProgressSubscriber<UploadResult>() {
                     @Override
-                    public void onResponse(Call<UploadResult> call, Response<UploadResult> response) {
-                        Log.e("lsz", "上传成功");
-//                        mWebView.loadUrl("javascript:uploadSuccess()");
-                        EventBus.getDefault().post(new UploadSuccessEvent("上传成功"));
+                    protected void onError(ApiException ex) {
+                        Log.e("lsz", "上传失败");
                     }
 
                     @Override
-                    public void onFailure(Call<UploadResult> call, Throwable t) {
-                        Log.e("lsz", "上传失败");
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onNext(UploadResult uploadResult) {
+                        Log.e("lsz", "上传成功");
+                        EventBus.getDefault().post(new UploadSuccessEvent("上传成功"));
                     }
                 });
     }
 
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -632,11 +715,80 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    public Uri photoUri;
+
+    private void saveCameraImage(Intent data) {
+        // 检查sd card是否存在
+        if (!Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT).show();
+            Log.e("lsz", "sd card is not avaiable/writeable right now.");
+            return;
+        }
+        String fileName = "";
+        if (data == null) { //可能尚未指定intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            if (ContentResolver.SCHEME_FILE.equals(photoUri.getScheme())) {
+                fileName = photoUri.getPath();
+            }
+        } else {
+            Bitmap bmp = (Bitmap) data.getExtras().get("data");
+            String filePath = Environment.getExternalStorageDirectory().toString() + File.separator + "EasyRent";
+            fileName = filePath + "Pic_" + System.currentTimeMillis() + ".jpg";
+
+            // 保存文件
+            FileOutputStream fos = null;
+            File file = new File(filePath);
+            //判断文件夹是否存在,如果不存在则创建文件夹
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            try {// 写入SD card
+                fos = new FileOutputStream(fileName);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }// 显示图片
+        }
+        uploadPic(fileName);
+    }
+
+    private void uploadPic(String imgPath) {
+        Log.e("lsz", "imgPath = " + imgPath);
+        if (TextUtils.isEmpty(imgPath)) {
+            return;
+        }
+        String key = UserProfilePrefs.getInstance().getUserToken();
+        String userName = LoginInfoPrefs.getInstance(this).getUserName();
+        AppModel.model().uploadPic(key, userName,
+                imgPath, typeStr, sonpathStr, newnameStr, timestampStr,
+                new Callback<UploadResult>() {
+                    @Override
+                    public void onResponse(Call<UploadResult> call, Response<UploadResult> response) {
+                        Log.e("lsz", "上传成功");
+                        EventBus.getDefault().post(new UploadSuccessEvent("上传成功"));
+                    }
+
+                    @Override
+                    public void onFailure(Call<UploadResult> call, Throwable t) {
+                        Log.e("lsz", "上传失败");
+                    }
+                });
+
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
@@ -644,6 +796,16 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(LogOutEvent messageEvent) {
+        if(firstFragment != null){
+            if(firstFragment.mWebView != null){
+                firstFragment.mWebView.clearCache(true);
+            }
+        }
+        if(eighthFragment != null){
+            if(eighthFragment.mWebView != null){
+                eighthFragment.mWebView.clearCache(true);
+            }
+        }
         finish();
     }
 

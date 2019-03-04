@@ -97,8 +97,8 @@ public class CommonFragment extends Fragment {
         mWebView.setWebViewClient(mWebViewClient);
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
-//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
+//        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.addJavascriptInterface(new JSBridge(mWebView, getActivity()), "App");
 //        mWebView.getSettings().setBlockNetworkImage(false);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){

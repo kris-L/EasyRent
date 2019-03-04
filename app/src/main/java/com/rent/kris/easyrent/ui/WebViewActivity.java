@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.entity.UploadResult;
+import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
 import com.rent.kris.easyrent.util.CommonUtils;
@@ -39,10 +40,14 @@ import com.rent.kris.easyrent.web.WebViewSettings;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xw.common.prefs.LoginInfoPrefs;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
@@ -328,6 +333,7 @@ public class WebViewActivity extends AppCompatActivity {
                         Log.e("lsz", "上传失败");
                     }
                 });
+
     }
 
 }

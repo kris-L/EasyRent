@@ -3,6 +3,7 @@ package com.rent.kris.easyrent.web;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -16,7 +17,7 @@ import java.io.File;
 import java.util.HashSet;
 
 public class WebViewHelper {
-
+    public static String TAG = "WebViewHelper";
     private static long prevGoBackTime;
 
     private WebViewHelper() {
@@ -43,7 +44,7 @@ public class WebViewHelper {
 
     public static String getWebCacheDirPath() {
         String cacheDirPath = Utils.getDiskCacheDir();
-        //Log.i(TAG, "cacheDirPath="+cacheDirPath);
+        Log.i(TAG, "cacheDirPath="+cacheDirPath);
         //设置数据库缓存路径
         if (!TextUtils.isEmpty(cacheDirPath)) {
             cacheDirPath += "/webcache";

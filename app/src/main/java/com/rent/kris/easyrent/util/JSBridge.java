@@ -40,6 +40,15 @@ public class JSBridge {
         mContext.finish();
     }
 
+    @JavascriptInterface
+    public void uploadImage(String jsonstr) {
+        Log.e("lsz","uploadImage");
+        Gson gson = new Gson();
+        UploadInfo uploadInfo = gson.fromJson(jsonstr, new TypeToken<UploadInfo>() {
+        }.getType());
+        mContext.uploadImage(uploadInfo.type,uploadInfo.sonpath,uploadInfo.newname,uploadInfo.timestamp);
+    }
+
 
     @JavascriptInterface
     public void uploadImages(String jsonstr) {
