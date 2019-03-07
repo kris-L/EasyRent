@@ -1,5 +1,6 @@
 package com.rent.kris.easyrent.ui;
 
+import android.util.Log;
 import android.view.View;
 
 import com.rent.kris.easyrent.MyApplication;
@@ -40,6 +41,7 @@ public class FirstFragment2  extends BaseFragment {
         String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/indexa.html"+
                 "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
                 LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        Log.e("FirstFragment2","url="+url);
         mWebView.loadUrl(url);
     }
 
