@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.entity.UserProfile;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
@@ -92,66 +93,66 @@ public class FouthFragment extends BaseFragment {
                 break;
 
             case R.id.my_account_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/my_account.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/my_account.html";
                 Utils.GotoWebView(getActivity(),url);
 
                 break;
 
             case R.id.my_contract_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/pact.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/pact.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_appointment_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/my-order.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/my-order.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_order_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/the-order.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/the-order.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.evaluate_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/evaluate.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/evaluate.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.favorite_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/collection.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/collection.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.share_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/share.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/share.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.my_homepage_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/homepage.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.attention_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/homepage.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
             case R.id.user_identification_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/landlord.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/landlord.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.user_service_ll:
-                url = "http://app.tit306.com/appa/app2/public/index.php/mobile/yizu/keguphone.html";
+                url = Constant.BASE_URL +"appa/app2/public/index.php/mobile/yizu/keguphone.html";
                 Utils.GotoWebView(getActivity(),url);
                 break;
 
 
             case R.id.user_message_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/homepage.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/homepage.html";
                 Utils.GotoWebView(getActivity(),url);
 //                Intent intent = new Intent(getActivity(), PhotoPickActivity.class);
 //                intent.putExtra(PhotoPickActivity.EXTRA_MAX, 5);
@@ -160,7 +161,7 @@ public class FouthFragment extends BaseFragment {
 
             case R.id.login_tv:
                 if(isLogin){
-                    url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/member.html";
+                    url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/member.html";
                     Utils.GotoWebView(getActivity(),url);
                 }else{
                     LoginActivity.intentTo(getActivity());

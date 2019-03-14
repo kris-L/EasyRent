@@ -1,5 +1,6 @@
 package com.rent.kris.easyrent.api;
 
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.entity.CommonEntity;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
@@ -30,14 +31,14 @@ public interface Api {
     /**
      * 登录
      */
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Login/index.html")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Login/index.html")
     Observable<MyApiResponse<UserProfile>> login(@Body Map<String, String> params);
 
 
     /**
      * 注册
      */
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Connect/sms_register.html")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Connect/sms_register.html")
     Observable<MyApiResponse<UserProfile>> register(@Body Map<String, String> params);
 
     @Streaming
@@ -47,20 +48,20 @@ public interface Api {
     /**
      * 获取验证码
      */
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Connect/smsfs.html")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Connect/smsfs.html")
     Observable<MyApiResponse<CommonEntity>> getCode(@Body Map<String, String> params);
 
 
     @Multipart
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
     Observable<UploadResult> uploadPic(@Part List<MultipartBody.Part> partLis);
 
     @Multipart                  //这里用Multipart
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Yijia/uploadFapiao")
     Call<UploadResult> myUpload(@Part List<MultipartBody.Part> partLis);
 
     @Multipart                  //这里用Multipart
-    @POST("http://app.tit306.com/appa/app2/public/index.php/mobile/Yijia/uploadWeixiu")
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Yijia/uploadWeixiu")
     Observable<UploadResult> myUploadS(@Part List<MultipartBody.Part> partLis);
 
 }

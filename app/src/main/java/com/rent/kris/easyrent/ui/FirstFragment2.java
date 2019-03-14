@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.rent.kris.easyrent.MyApplication;
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
 import com.xw.common.prefs.LoginInfoPrefs;
@@ -38,7 +39,7 @@ public class FirstFragment2  extends BaseFragment {
     @Override
     public void initView(View view) {
         tvTitle.setText("易租");
-        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/indexa.html"+
+        String url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/indexa.html"+
                 "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
                 LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
         Log.e("FirstFragment2","url="+url);

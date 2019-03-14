@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseFragment;
 import com.xw.common.prefs.LoginInfoPrefs;
@@ -45,7 +46,7 @@ public class EighthFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         tvTitle.setText("我的商城");
-        String url = "http://app.tit306.com/appa/app2/public/wap/tmpl/member/member.html";
+        String url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/member.html";
         if(!TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
             url = url + "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
                     LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();

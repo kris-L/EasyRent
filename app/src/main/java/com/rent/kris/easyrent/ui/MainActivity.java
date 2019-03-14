@@ -178,27 +178,27 @@ public class MainActivity extends BaseActivity {
         seventhFragment = SeventhFragment.getInstance(true);
         eighthFragment = EighthFragment.getInstance(true);
 
-        String urlStr = "http://app.tit306.com/appa/food/index.html";
+        String urlStr = Constant.BASE_URL +"appa/food/index.html";
         String title = "美食";
         commonFragment31 = CommonFragment.newInstance(urlStr, title);
-        urlStr = "http://app.tit306.com/appa/beauty/index.html";
+        urlStr = Constant.BASE_URL +"appa/beauty/index.html";
         title = "美容美发";
         commonFragment41 = CommonFragment.newInstance(urlStr, title);
 
-        urlStr = "http://app.tit306.com/appa/farmers/index.html";
+        urlStr = Constant.BASE_URL +"appa/farmers/index.html";
         title = "农产品";
         commonFragment51 = CommonFragment.newInstance(urlStr, title);
 
-        urlStr = "http://app.tit306.com/appa/bbs/";
+        urlStr = Constant.BASE_URL +"appa/bbs/";
         title = "论坛";
         commonFragment61 = CommonFragment.newInstance(urlStr, title);
-        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=forum&amp";
+        urlStr = Constant.BASE_URL +"appa/bbs/index.php?c=forum&amp";
         title = "搜索";
         commonFragment62 = CommonFragment.newInstance(urlStr, title);
-        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=edit&type=read&id=0&sortid=";
+        urlStr = Constant.BASE_URL +"appa/bbs/index.php?c=edit&type=read&id=0&sortid=";
         title = "唠叨";
         commonFragment63 = CommonFragment.newInstance(urlStr, title);
-        urlStr = "http://app.tit306.com/appa/bbs/index.php?c=user";
+        urlStr = Constant.BASE_URL +"appa/bbs/index.php?c=user";
         title = "我的";
         commonFragment64 = CommonFragment.newInstance(urlStr, title);
 

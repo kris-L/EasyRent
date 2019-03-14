@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.event.LogOutEvent;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
@@ -82,7 +83,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.change_password_ll:
                 intent = new Intent(this, WebViewActivity.class);
                 title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/member_password_step1.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/member_password_step1.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
                 intent.putExtra("url", url);
                 intent.putExtra("title", title);
                 startActivity(intent);
@@ -92,7 +93,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.address_ll:
                 intent = new Intent(this, WebViewActivity.class);
                 title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/address_list.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/address_list.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
                 intent.putExtra("url", url);
                 intent.putExtra("title", title);
                 startActivity(intent);
@@ -101,7 +102,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.instructions_ll:
                 intent = new Intent(this, WebViewActivity.class);
                 title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yijia/guide.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yijia/guide.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
                 intent.putExtra("url", url);
                 intent.putExtra("title", title);
                 startActivity(intent);
@@ -110,7 +111,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.feedback_ll:
                 intent = new Intent(this, WebViewActivity.class);
                 title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/member_feedback.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/member_feedback.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
                 intent.putExtra("url", url);
                 intent.putExtra("title", title);
                 startActivity(intent);
@@ -119,7 +120,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.about_us_ll:
                 intent = new Intent(this, WebViewActivity.class);
                 title = "";
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/yizu/about-us.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/yizu/about-us.html"+"?key="+UserProfilePrefs.getInstance().getUserToken();
                 intent.putExtra("url", url);
                 intent.putExtra("title", title);
                 startActivity(intent);

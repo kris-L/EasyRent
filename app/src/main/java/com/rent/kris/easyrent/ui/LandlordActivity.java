@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.base.BaseActivity;
 import com.rent.kris.easyrent.util.Utils;
@@ -63,7 +64,7 @@ public class LandlordActivity  extends BaseActivity {
     public void OnClickView(View view) {
         switch(view.getId()){
             case R.id.release_house_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/fabufa1.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/fabufa1.html";
                 Utils.GotoWebView(this,url);
                 break;
 
@@ -72,27 +73,27 @@ public class LandlordActivity  extends BaseActivity {
                 break;
 
             case R.id.my_appointment_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/my-order.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/my-order.html";
                 Utils.GotoWebView(this,url);
                 break;
 
             case R.id.earnings_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap//tmpl/member/my_account.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/my_account.html";
                 Utils.GotoWebView(this,url);
                 break;
 
             case R.id.housing_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yizu/my-house.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/my-house.html";
                 Utils.GotoWebView(this,url);
                 break;
 
             case R.id.tenant_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yijia/my-tenant.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yijia/my-tenant.html";
                 Utils.GotoWebView(this,url);
                 break;
 
             case R.id.work_ll:
-                url = "http://app.tit306.com/appa/app2/public/wap/tmpl/yijia/my-work.html";
+                url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yijia/my-work.html";
                 Utils.GotoWebView(this,url);
                 break;
         }
