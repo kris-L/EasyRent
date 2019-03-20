@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity {
         title = "农产品";
         commonFragment51 = CommonFragment.newInstance(urlStr, title);
 
-        urlStr = Constant.BASE_URL +"appa/bbs/";
+        urlStr = Constant.BASE_URL +"appa/bbs/index.php";
         title = "论坛";
         commonFragment61 = CommonFragment.newInstance(urlStr, title);
         urlStr = Constant.BASE_URL +"appa/bbs/index.php?c=forum&amp";
