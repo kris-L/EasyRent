@@ -160,7 +160,9 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="54dp"
-        android:paddingRight="54dp" >
+        android:paddingRight="54dp"
+        android:visibility="invisible"
+        >
 
         <View
             android:layout_width="0dp"
@@ -192,7 +194,9 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp" >
+        android:paddingRight="18dp"
+        android:visibility="invisible"
+        >
 
 
         <LinearLayout
