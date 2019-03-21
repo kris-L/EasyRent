@@ -1,5 +1,6 @@
 package com.rent.kris.easyrent.ui.base;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -16,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocationClient;
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
@@ -92,10 +95,28 @@ public class CommonFragment extends Fragment {
             public void onProgressChanged(WebView view, int newProgress) {
 
             }
+
+            // 处理定位权限请求
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin,
+                                                           GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
+            }
+
         });
 
         mWebView.setWebViewClient(mWebViewClient);
         WebSettings settings = mWebView.getSettings();
+        //启用地理定位
+        settings.setGeolocationEnabled(true);
+        //启用数据库
+        settings.setDatabaseEnabled(true);
+        //设置定位的数据库路径
+        String dir = MyApplication.getInstance().getDir("database", Context.MODE_PRIVATE).getPath();
+        settings.setGeolocationDatabasePath(dir);
+        settings.setDomStorageEnabled(true);  //定位的关键设置
+
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
 //        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -113,11 +134,15 @@ public class CommonFragment extends Fragment {
 
     public void initView(View view) {
         tvTitle.setText(mTitle);
-        String url = urlStr+
-                "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
-                LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        String url = urlStr;
+        if(!TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
+            url = urlStr+
+                    "?key="+UserProfilePrefs.getInstance().getUserToken()+"&username="+
+                    LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName();
+        }
 //        WebViewHelper.syncCookie(getActivity(), url);
         mWebView.loadUrl(url);
+
     }
 
 
