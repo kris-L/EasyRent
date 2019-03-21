@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
     private static final String TAG_FRAG_COMMON_64 = "app:fragment:common64";
 
     private Context mContext;
-    private FirstFragment2 firstFragment;
+    private CommonFragment firstFragment;
     private SecondFragment secondFragment;
     private ThirdFragment thirdFragment;
     private FouthFragment fouthFragment;
@@ -172,7 +172,10 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        firstFragment = FirstFragment2.getInstance(true);
+
+        String urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/indexa.html";
+        String title = "易租";
+        firstFragment = CommonFragment.newInstance(urlStr, title);
         secondFragment = SecondFragment.getInstance(true);
         thirdFragment = ThirdFragment.getInstance(true);
         fouthFragment = FouthFragment.getInstance(true);
@@ -181,8 +184,8 @@ public class MainActivity extends BaseActivity {
         seventhFragment = SeventhFragment.getInstance(true);
         eighthFragment = EighthFragment.getInstance(true);
 
-        String urlStr = Constant.BASE_URL +"appa/food/index.html";
-        String title = "美食";
+        urlStr = Constant.BASE_URL +"appa/food/index.html";
+        title = "美食";
         commonFragment31 = CommonFragment.newInstance(urlStr, title);
         urlStr = Constant.BASE_URL +"appa/beauty/index.html";
         title = "美容美发";
