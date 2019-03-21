@@ -15,7 +15,7 @@ android {
         multiDexEnabled true
         applicationId "com.rent.kris.easyrent"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 23
         versionCode 2
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -54,6 +54,24 @@ android {
         kuan {}
         leshi {}
         sougou {}
+    }
+
+
+    //定义一个装apk文件路径的数组
+    def fileArray = []
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.contains('release')) {
+                //获取每个打包产物
+                def variantProd = variant.productFlavors[0]
+                def fileName = "${variantProd.name}" + "_V${variant.versionName}.apk"
+                println "自定义输出apk的名字:" + fileName;
+                outputFileName = fileName;
+                println "输出apk地址:" + outputFile.parentFile.absolutePath + java.io.File.separator + fileName
+                fileArray.add(outputFile.parentFile.absolutePath + java.io.File.separator + fileName);
+            }
+        }
     }
 
     productFlavors.all { flavor ->
