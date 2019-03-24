@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
-import com.rent.kris.easyrent.util.JSBridge;
 import com.rent.kris.easyrent.web.WebViewSettings;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +34,6 @@ import butterknife.Unbinder;
 public class BaseFragment extends Fragment {
 
     private Unbinder unbinder;
-    public WebView mWebView;
     public TextView tvTitle;
 
     private String mTitle = "";
@@ -44,7 +42,6 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_commonality, container, false);
         unbinder = ButterKnife.bind(this,view);
-        EventBus.getDefault().register(this);
         initWebView(view);
         initView(view);
         return view;
@@ -54,50 +51,12 @@ public class BaseFragment extends Fragment {
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
 //      tvTitle.setText(getIntent().getStringExtra("title"));
 
-        mWebView = (WebView) view.findViewById(R.id.m_web_view);
-        WebViewSettings.config(mWebView.getSettings());
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                if (TextUtils.isEmpty(mTitle)) {
-                    tvTitle.setText(title);
-                }
-            }
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-
-            }
-        });
-
-        mWebView.setWebViewClient(mWebViewClient);
-        WebSettings settings = mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);//开启本地DOM存储
-//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
-
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        mWebView.addJavascriptInterface(new JSBridge(mWebView, getActivity()), "App");
-//        mWebView.getSettings().setBlockNetworkImage(false);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        }
-        //设置可调试
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
     }
 
     public void initView(View view) {
 
 
     }
-
-
 
 
     public WebViewClient mWebViewClient = new WebViewClient() {
@@ -136,16 +95,6 @@ public class BaseFragment extends Fragment {
         super.onDestroyView();
         if(unbinder != null){
             unbinder.unbind();
-        }
-        if(EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(UploadSuccessEvent messageEvent) {
-        if(mWebView != null){
-            mWebView.loadUrl("javascript:uploadSuccess()");
         }
     }
 

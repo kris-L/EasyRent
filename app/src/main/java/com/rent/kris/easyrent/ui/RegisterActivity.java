@@ -1,5 +1,6 @@
 package com.rent.kris.easyrent.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +9,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +39,7 @@ import butterknife.OnClick;
 /**
  * Created by lsz  on 2019-01-28
  */
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
 
     @BindView(R.id.banner)
@@ -52,6 +56,11 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.password_et)
     EditText password_et;
 
+    @BindView(R.id.agreement_confer_cb)
+    CheckBox agreement_confer_cb;
+    @BindView(R.id.agreement_tv)
+    TextView agreement_tv;
+
     private boolean isCountDown = false ;
     private TimeCount timeCount;
     private Context mContext;
@@ -59,9 +68,32 @@ public class RegisterActivity extends BaseActivity {
     private String code = "";
     private String password = "";
 
-    public static void intentTo(Context context) {
+    public static String KEY_UID = "uid";
+    public static String KEY_MEMBER_NAME = "member_name";
+    public static String KEY_MEMBER_SEX = "member_sex";
+    public static String KEY_MEMBER_AVATAR = "member_avatar";
+    public static String KEY_SOURCE = "source";
+
+    private String uid = "";
+    private String member_name = "";
+    private String member_sex = "";
+    private String member_avatar = "";
+    private String source = "";
+
+    public static void intentTo(Context context,int requestCode) {
         Intent intent = new Intent(context, RegisterActivity.class);
-        context.startActivity(intent);
+        ((Activity)context).startActivityForResult(intent,requestCode);
+    }
+
+    public static void intentTo(Context context,int requestCode, String uid,String member_name,
+                                 String member_sex, String member_avatar, String source) {
+        Intent intent = new Intent(context, RegisterActivity.class);
+        intent.putExtra(KEY_UID,uid);
+        intent.putExtra(KEY_MEMBER_NAME,member_name);
+        intent.putExtra(KEY_MEMBER_SEX,member_sex);
+        intent.putExtra(KEY_MEMBER_AVATAR,member_avatar);
+        intent.putExtra(KEY_SOURCE,source);
+        ((Activity)context).startActivityForResult(intent,requestCode);
     }
 
     @Override
@@ -75,6 +107,13 @@ public class RegisterActivity extends BaseActivity {
 
     private void initViews() {
         phone_et.addTextChangedListener(watcher);
+        Intent mIntent = getIntent();
+        uid = mIntent.getStringExtra(KEY_UID);
+        member_name = mIntent.getStringExtra(KEY_MEMBER_NAME);
+        member_sex = mIntent.getStringExtra(KEY_MEMBER_SEX);
+        member_avatar = mIntent.getStringExtra(KEY_MEMBER_AVATAR);
+        source = mIntent.getStringExtra(KEY_SOURCE);
+        agreement_confer_cb.setOnCheckedChangeListener(this);
     }
 
 
@@ -172,7 +211,9 @@ public class RegisterActivity extends BaseActivity {
     private void requestRegister(final String name, final String pwd,String codeStr) {
         showProgressDialog("正在注册…");
         WebViewHelper.clearWebViewCacheNCookies();
-        AppModel.model().register(name, pwd,codeStr, new NoneProgressSubscriber<UserProfile>() {
+        AppModel.model().register(name, pwd,codeStr, uid, member_name,
+                 member_sex, member_avatar, source,
+                new NoneProgressSubscriber<UserProfile>() {
             @Override
             protected void onError(ApiException ex) {
                 dismissProgressDialog();
@@ -191,11 +232,24 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onNext(UserProfile student) {
                 dismissProgressDialog();
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 MainActivity.intentTo(mContext,1);
                 AppToast.makeText(mContext, "注册成功");
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            next_tv.setBackground(getResources().getDrawable(R.drawable.shape_circular_bead_orange));
+            next_tv.setEnabled(true);
+        }else{
+            next_tv.setBackground(getResources().getDrawable(R.drawable.shape_circular_gray));
+            next_tv.setEnabled(false);
+        }
     }
 
 

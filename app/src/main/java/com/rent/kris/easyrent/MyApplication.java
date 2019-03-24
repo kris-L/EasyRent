@@ -41,12 +41,13 @@ public class MyApplication extends MultiDexApplication {
                 ,"umeng", UMConfigure.DEVICE_TYPE_PHONE,"");
 
         //各个平台的配置，建议放在全局Application或者程序入口
-//        //微信
-//        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
-//        //新浪微博
-//        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad","http://sns.whalecloud.com");
-//        //QQ登录
-//        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+        //微信
+        PlatformConfig.setWeixin("wx438715823b500229", "50c66629ca677d666b2c195de38299f9");
+        //新浪微博
+//        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad","https://sns.whalecloud.com/sina2/callback");
+        PlatformConfig.setSinaWeibo("2285817041", "3eccd8545d12ef94b84d527a31563f66","https://sns.whalecloud.com/sina2/callback");
+        //QQ登录
+        PlatformConfig.setQQZone("101559757", "98b1e4b31994a1d537bd6c91e3fbf7c6");
 
         initImageLoader(this);
     }

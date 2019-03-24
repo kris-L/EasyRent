@@ -8,6 +8,7 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.rent.kris.easyrent.entity.ShareInfo;
 import com.rent.kris.easyrent.entity.UploadInfo;
 
 
@@ -22,12 +23,13 @@ public class JavaAndJSBridge {
     }
 
     public interface OnJSCallBack{
-        void onPickPhoto();
-        void onMakePhoto();
         void uploadImage(String type,String sonpath,String newname,String timestamp);
+        void uploadImages(String type,String sonpath,String newname,String timestamp);
         void onLoginNotify();
         void onCallPhone(String phone);
         void onModuleSelected(int index);
+        void onWechatShare(ShareInfo data);
+        void onGpsNotify();
     }
 
 
@@ -66,7 +68,7 @@ public class JavaAndJSBridge {
     @JavascriptInterface
     public void uploadImages(String type,String sonpath,String newname,String timestamp) {
         if(jsListener != null){
-            jsListener.uploadImage(type,sonpath, newname,timestamp);
+            jsListener.uploadImages(type,sonpath, newname,timestamp);
         }
     }
 
@@ -77,15 +79,26 @@ public class JavaAndJSBridge {
         }
     }
 
-
-
-    //暴露给sdk的本地方法
     @JavascriptInterface
-    public void native_launchFunc(final String funcName, final String jsonStr) {
-        //这里基本上不会是ui线程
+    public void wechatShare(String data) {
+        Log.e("lsz","wechatShare");
+        Gson gson = new Gson();
+        ShareInfo mShareInfo = gson.fromJson(data, new TypeToken<ShareInfo>() {
+        }.getType());
 
+        if(jsListener != null){
+            jsListener.onWechatShare(mShareInfo);
+        }
     }
 
+
+    @JavascriptInterface
+    public void gpsNotify() {
+        Log.e("lsz","gpsNotify");
+        if(jsListener != null){
+            jsListener.onGpsNotify();
+        }
+    }
 
 
 }

@@ -29,6 +29,7 @@ public class LandlordActivity  extends BaseActivity {
     TextView name_tv;
     @BindView(R.id.release_house_tv)
     TextView release_house_tv;
+    private Boolean isLogin = false;
 
     private Context mContext;
     public static void intentTo(Context context) {
@@ -48,8 +49,10 @@ public class LandlordActivity  extends BaseActivity {
 
     private void initViews() {
         if(TextUtils.isEmpty(UserProfilePrefs.getInstance().getUserToken())){
+            isLogin =false;
             name_tv.setText("未登录");
         }else{
+            isLogin = true;
             name_tv.setText(LoginInfoPrefs.getInstance(MyApplication.getInstance()).getUserName());
         }
     }
@@ -60,9 +63,18 @@ public class LandlordActivity  extends BaseActivity {
     public String url = "";
 
     @OnClick({R.id.go_renter_tv,R.id.my_appointment_ll,R.id.earnings_ll,R.id.housing_ll,R.id.tenant_ll,
-            R.id.work_ll,R.id.release_house_tv,R.id.release_house_ll})
+            R.id.work_ll,R.id.release_house_tv,R.id.release_house_ll,R.id.name_tv})
     public void OnClickView(View view) {
         switch(view.getId()){
+            case R.id.name_tv:
+                if(isLogin){
+                    url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/member.html";
+                    Utils.GotoWebView(this,url);
+                }else{
+                    LoginActivity.intentTo(this);
+                    finish();
+                }
+                break;
             case R.id.release_house_ll:
                 url = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/fabufa1.html";
                 Utils.GotoWebView(this,url);

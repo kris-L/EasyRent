@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
+import com.rent.kris.easyrent.entity.ShareInfo;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
@@ -136,16 +137,12 @@ public class LoadingActivity extends AppCompatActivity {
     public JavaAndJSBridge.OnJSCallBack jsListener = new JavaAndJSBridge.OnJSCallBack() {
 
         @Override
-        public void onPickPhoto() {
-        }
-
-
-        @Override
-        public void onMakePhoto() {
-        }
-
-        @Override
         public void uploadImage(String type, String sonpath, String newname, String timestamp) {
+
+        }
+
+        @Override
+        public void uploadImages(String type, String sonpath, String newname, String timestamp) {
 
         }
 
@@ -164,6 +161,16 @@ public class LoadingActivity extends AppCompatActivity {
             Log.e("lsz","onModuleSelected index="+index);
             MainActivity.intentTo(LoadingActivity.this,index+1);
             finish();
+        }
+
+        @Override
+        public void onWechatShare(ShareInfo data) {
+
+        }
+
+        @Override
+        public void onGpsNotify() {
+
         }
     };
 

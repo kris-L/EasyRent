@@ -25,6 +25,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.LatLng;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.MalformedJsonException;
 import com.rent.kris.easyrent.MyApplication;
@@ -32,8 +37,10 @@ import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.adapter.SelectModuleAdapter;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
+import com.rent.kris.easyrent.entity.ShareInfo;
 import com.rent.kris.easyrent.entity.UploadResult;
 import com.rent.kris.easyrent.entity.UserProfile;
+import com.rent.kris.easyrent.event.GpsNotify;
 import com.rent.kris.easyrent.event.LogOutEvent;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
@@ -47,8 +54,14 @@ import com.rent.kris.easyrent.ui.view.BottomBar;
 import com.rent.kris.easyrent.ui.view.PopupMenuUtil;
 import com.rent.kris.easyrent.util.Base64Util;
 import com.rent.kris.easyrent.util.CommonUtils;
+import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.xw.common.AppToast;
 import com.xw.common.prefs.LoginInfoPrefs;
 import com.xw.ext.http.retrofit.api.NoneProgressSubscriber;
@@ -76,7 +89,9 @@ import retrofit2.Response;
 
 import static com.rent.kris.easyrent.ui.photopick.PhotoPickActivity.PHOTO_MAX_COUNT;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity{
+
+    private static String TAG = "MainActivity";
 
     @BindView(R.id.center_img)
     ImageView mCenterImage;
@@ -113,14 +128,14 @@ public class MainActivity extends BaseActivity {
 
     private Context mContext;
     private CommonFragment firstFragment;
-    private SecondFragment secondFragment;
-    private ThirdFragment thirdFragment;
+    private CommonFragment secondFragment;
+    private CommonFragment thirdFragment;
     private FouthFragment fouthFragment;
 
-    private FifthFragment fifthFragment;
-    private SixthFragment sixthFragment;
-    private SeventhFragment seventhFragment;
-    private EighthFragment eighthFragment;
+    private CommonFragment fifthFragment;
+    private CommonFragment sixthFragment;
+    private CommonFragment seventhFragment;
+    private CommonFragment eighthFragment;
 
     private CommonFragment commonFragment31;
     private CommonFragment commonFragment32;
@@ -167,6 +182,7 @@ public class MainActivity extends BaseActivity {
 
         EventBus.getDefault().register(this);
         initView();
+        initLocation();
     }
 
     private void initView() {
@@ -176,17 +192,37 @@ public class MainActivity extends BaseActivity {
         String urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/indexa.html";
         String title = "易租";
         firstFragment = CommonFragment.newInstance(urlStr, title);
-        secondFragment = SecondFragment.getInstance(true);
-        thirdFragment = ThirdFragment.getInstance(true);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yijia/index.html";
+        title = "易家";
+        secondFragment = CommonFragment.newInstance(urlStr, title);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/news.html";
+        title = "易租";
+        thirdFragment = CommonFragment.newInstance(urlStr, title);
+
         fouthFragment = FouthFragment.getInstance(true);
-        fifthFragment = FifthFragment.getInstance(true);
-        sixthFragment = SixthFragment.getInstance(true);
-        seventhFragment = SeventhFragment.getInstance(true);
-        eighthFragment = EighthFragment.getInstance(true);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/appindex.html";
+        title = "商家";
+        fifthFragment = CommonFragment.newInstance(urlStr, title);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/product_list.html";
+        title = "商品";
+        sixthFragment = CommonFragment.newInstance(urlStr, title);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/shopping.html";
+        title = "购物车";
+        seventhFragment = CommonFragment.newInstance(urlStr, title);
+
+        urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/member/member.html";
+        title = "我的商城";
+        eighthFragment = CommonFragment.newInstance(urlStr, title);
 
         urlStr = Constant.BASE_URL +"appa/food/index.html";
         title = "美食";
         commonFragment31 = CommonFragment.newInstance(urlStr, title);
+
         urlStr = Constant.BASE_URL +"appa/beauty/index.html";
         title = "美容美发";
         commonFragment41 = CommonFragment.newInstance(urlStr, title);
@@ -207,7 +243,6 @@ public class MainActivity extends BaseActivity {
         urlStr = Constant.BASE_URL +"appa/bbs/index.php?c=user";
         title = "我的";
         commonFragment64 = CommonFragment.newInstance(urlStr, title);
-
 
         currentFragmentTag = TAG_FRAG_FIRST;
         if (tabType > 6) {
@@ -249,7 +284,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onCenterClick() {
-//                showSelectDialog();
+//              showSelectDialog();
                 showSelectPopWindow();
             }
         });
@@ -535,13 +570,7 @@ public class MainActivity extends BaseActivity {
     public String timestampStr = "";
     private ArrayList<ImageInfo> pickImages = new ArrayList<>();
 
-    public void uploadImage(String type, String sonpath, String newname, String timestamp) {
-        typeStr = type;
-        sonpathStr = sonpath;
-        newnameStr = newname;
-        timestampStr = timestamp;
-        showMoreDialog();
-    }
+
 
     private void showMoreDialog() {
         ExamineMoreDialog dialog = new ExamineMoreDialog(this);
@@ -603,24 +632,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public void uploadImages(String type, String sonpath, String newname, String timestamp) {
-        typeStr = type;
-        sonpathStr = sonpath;
-        newnameStr = newname;
-        timestampStr = timestamp;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                pickPhoto();
-            }
-        });
-
-    }
-
-    public void onCallPhone(final String phone) {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
-        startActivity(intent);
-    }
 
     //去系统相册
     public void pickPhoto() {
@@ -663,7 +674,6 @@ public class MainActivity extends BaseActivity {
             }
 
         } else if (requestCode == PDD_PLAY_SNAKE && resultCode == RESULT_OK) {
-            //玩了一波蛇
             String funcName = data.getStringExtra("funcName");
             String someWord = data.getStringExtra("someWord");
             JsonObject jsonObject = new JsonObject();
@@ -801,7 +811,6 @@ public class MainActivity extends BaseActivity {
                         Log.e("lsz", "上传失败");
                     }
                 });
-
     }
 
 
@@ -827,6 +836,153 @@ public class MainActivity extends BaseActivity {
             }
         }
         finish();
+    }
+
+    public JavaAndJSBridge.OnJSCallBack jsListener = new JavaAndJSBridge.OnJSCallBack() {
+
+        @Override
+        public void uploadImage(String type, String sonpath, String newname, String timestamp) {
+            typeStr = type;
+            sonpathStr = sonpath;
+            newnameStr = newname;
+            timestampStr = timestamp;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showMoreDialog();
+                }
+            });
+        }
+
+        @Override
+        public void uploadImages(String type, String sonpath, String newname, String timestamp) {
+            typeStr = type;
+            sonpathStr = sonpath;
+            newnameStr = newname;
+            timestampStr = timestamp;
+            pickPhoto();
+        }
+
+        @Override
+        public void onLoginNotify() {
+            LoginActivity.intentTo(mContext);
+            finish();
+        }
+
+        @Override
+        public void onCallPhone(final String phone) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                    startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public void onModuleSelected(int index) {
+
+        }
+
+        @Override
+        public void onWechatShare(final ShareInfo data) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String title = data.title;
+                    String desc = data.desc;
+                    String icon_url = data.icon_url;
+                    String web_url = data.web_url;
+
+                    UMImage image = new UMImage(MainActivity.this, icon_url);
+                    UMWeb web = new UMWeb(web_url);
+                    web.setTitle(title);//标题
+                    web.setThumb(image);  //缩略图
+                    web.setDescription(desc);//描述
+
+                    new ShareAction(MainActivity.this).withText(title)
+                            .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
+                            .setCallback(umShareListener)
+                            .withMedia(web)
+                            .open();
+                }
+            });
+        }
+
+        @Override
+        public void onGpsNotify() {
+            if(latLng != null){
+                EventBus.getDefault().post(new GpsNotify());
+            }else{
+                Log.e(TAG,"定位数据为空");
+            }
+        }
+    };
+
+    UMShareListener umShareListener = new UMShareListener(){
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onStart");
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onResult");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            Log.e(TAG, "分享"+"onError");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onCancel");
+        }
+    };
+
+
+//    @Override
+//    public void onLocationChanged(AMapLocation aMapLocation) {
+//        if (aMapLocation != null
+//                && aMapLocation.getErrorCode() == 0) {
+//            latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+//        }
+//    }
+    public static LatLng latLng = null;
+    //声明AMapLocationClient类对象
+    public AMapLocationClient mLocationClient = null;
+    //声明AMapLocationClientOption对象
+    public AMapLocationClientOption mLocationOption = null;
+
+    //声明定位回调监听器
+    public AMapLocationListener mLocationListener = new AMapLocationListener() {
+        @Override
+        public void onLocationChanged(AMapLocation aMapLocation) {
+            Log.e(TAG,"aMapLocation="+aMapLocation);
+            if (aMapLocation != null
+                    && aMapLocation.getErrorCode() == 0) {
+                latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+            }
+        }
+    };
+
+    public void initLocation(){
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getApplicationContext());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(mLocationListener);
+       //初始化AMapLocationClientOption对象
+        if(mLocationOption == null){
+            mLocationOption = new AMapLocationClientOption();
+        }
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        mLocationOption.setInterval(10000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
     }
 
 }

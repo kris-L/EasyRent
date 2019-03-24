@@ -81,7 +81,7 @@ public class AppModel extends ApiModel<Api> {
     }
 
     public void login(final String userName, final String password, Subscriber<UserProfile> subscriber) {
-        LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
+//        LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
         Map<String, String> params = new HashMap<>();
         params.put("username", userName);
         params.put("password", password);
@@ -101,13 +101,62 @@ public class AppModel extends ApiModel<Api> {
         toSubscribe(observable, subscriber, null);
     }
 
-    public void register(final String userName, final String password,String code, Subscriber<UserProfile> subscriber) {
+    /**
+     * 三方授权登录
+     * @param uid
+     * @param member_name
+     * @param member_sex
+     * @param member_avatar
+     * @param source
+     * @param subscriber
+     */
+    public void wqwregister(String uid, final String member_name, String member_sex, String member_avatar,
+                            String source, Subscriber<UserProfile> subscriber) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("member_name", member_name);
+        params.put("member_sex", member_sex);
+        params.put("member_avatar", member_avatar);
+        params.put("source", source);
+        Observable<UserProfile> observable = api().wqwregister(params)
+                .map(new MyApiResponseFunc<UserProfile>())
+                .onErrorResumeNext(new ApiOnErrorFunc<UserProfile>())
+                .flatMap(new Func1<UserProfile, Observable<UserProfile>>() {
+                    @Override
+                    public Observable<UserProfile> call(UserProfile userProfile) {
+                        LoginHelper.onLogin("", "", userProfile);
+                        RequestInterceptor.getInstance().setTokenValue(userProfile.key);
+                        return Observable.just(userProfile);
+                    }
+                });
+
+        toSubscribe(observable, subscriber, null);
+    }
+
+    public void register(final String userName, final String password,String code,String uid,String member_name,
+                         String member_sex, String member_avatar, String source,
+                         Subscriber<UserProfile> subscriber) {
         LoginInfoPrefs.getInstance(MyApplication.getInstance()).saveLoginInfo(userName, password);
         Map<String, String> params = new HashMap<>();
         params.put("phone", userName);
         params.put("password", password);
         params.put("captcha", code);
         params.put("client", "wap");
+        if(!TextUtils.isEmpty(uid)){
+            params.put("uid", uid);
+        }
+        if(!TextUtils.isEmpty(member_name)){
+            params.put("member_name", member_name);
+        }
+        if(!TextUtils.isEmpty(member_sex)){
+            params.put("member_sex", member_sex);
+        }
+        if(!TextUtils.isEmpty(member_avatar)){
+            params.put("member_avatar", member_avatar);
+        }
+        if(!TextUtils.isEmpty(source)){
+            params.put("source", source);
+        }
         Observable<UserProfile> observable = api().register(params)
                 .map(new MyApiResponseFunc<UserProfile>())
                 .onErrorResumeNext(new ApiOnErrorFunc<UserProfile>())

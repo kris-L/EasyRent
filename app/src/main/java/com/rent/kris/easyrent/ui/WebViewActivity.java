@@ -28,7 +28,9 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
+import com.rent.kris.easyrent.entity.ShareInfo;
 import com.rent.kris.easyrent.entity.UploadResult;
+import com.rent.kris.easyrent.event.GpsNotify;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
 import com.rent.kris.easyrent.ui.dialog.ExamineMoreDialog;
@@ -38,6 +40,11 @@ import com.rent.kris.easyrent.util.RealPathUtil;
 import com.rent.kris.easyrent.util.TakePhotoUtils;
 import com.rent.kris.easyrent.web.WebViewSettings;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.xw.common.prefs.LoginInfoPrefs;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,6 +62,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WebViewActivity extends AppCompatActivity {
+
+    private static String TAG = "WebViewActivity";
 
     private static final int REQUEST_PICK_IMAGE = 10086;
     private static final int PDD_PLAY_SNAKE = REQUEST_PICK_IMAGE + 1;
@@ -134,44 +143,36 @@ public class WebViewActivity extends AppCompatActivity {
         }
     };
 
-    public String typeStr, sonpathStr, newnameStr, timestampStr;
-    public Uri photoUri;
-    @SuppressLint("CheckResult")
-    public JavaAndJSBridge.OnJSCallBack jsListener = new JavaAndJSBridge.OnJSCallBack() {
-
-        @Override
-        public void onPickPhoto() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception {
-                            if (aBoolean) {
-                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                                startActivityForResult(intent, REQUEST_PICK_IMAGE);
-                            } else {
-                                Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
-                            }
+    public void onPickPhoto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                            startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                        } else {
+                            Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                         }
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
+    }
 
-
-        @Override
-        public void onMakePhoto() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception {
-                            if (aBoolean) {
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+    public void onMakePhoto() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new RxPermissions(WebViewActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
 
 //                                try {
 //                                    photoUri = TakePhotoUtils.takePhoto(WebViewActivity.this, REQUEST_TAKE_PHOTO);
@@ -179,17 +180,32 @@ public class WebViewActivity extends AppCompatActivity {
 //                                    e.printStackTrace();
 //                                }
 
-                            } else {
-                                Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
-                            }
+                        } else {
+                            Toast.makeText(WebViewActivity.this, "请给予权限，谢谢", Toast.LENGTH_SHORT).show();
                         }
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    public String typeStr, sonpathStr, newnameStr, timestampStr;
+    public Uri photoUri;
+    @SuppressLint("CheckResult")
+    public JavaAndJSBridge.OnJSCallBack jsListener = new JavaAndJSBridge.OnJSCallBack() {
 
         @Override
         public void uploadImage(String type, String sonpath, String newname, String timestamp) {
+            typeStr = type;
+            sonpathStr = sonpath;
+            newnameStr = newname;
+            timestampStr = timestamp;
+            showMoreDialog();
+        }
+
+        @Override
+        public void uploadImages(String type, String sonpath, String newname, String timestamp) {
             typeStr = type;
             sonpathStr = sonpath;
             newnameStr = newname;
@@ -212,12 +228,67 @@ public class WebViewActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-
         }
 
         @Override
         public void onModuleSelected(int index) {
 
+        }
+
+        @Override
+        public void onWechatShare(final ShareInfo data) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String title = data.title;
+                    String desc = data.desc;
+                    String icon_url = data.icon_url;
+                    String web_url = data.web_url;
+
+                    UMImage image = new UMImage(WebViewActivity.this, icon_url);
+                    UMWeb web = new UMWeb(web_url);
+                    web.setTitle(title);//标题
+                    web.setThumb(image);  //缩略图
+                    web.setDescription(desc);//描述
+
+                    new ShareAction(WebViewActivity.this).withText(title)
+                            .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
+                            .setCallback(umShareListener)
+                            .withMedia(web)
+                            .open();
+                }
+            });
+        }
+
+        @Override
+        public void onGpsNotify() {
+            if(MainActivity.latLng != null){
+                EventBus.getDefault().post(new GpsNotify());
+            }else{
+                Log.e(TAG,"定位数据为空");
+            }
+        }
+    };
+
+    UMShareListener umShareListener = new UMShareListener(){
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onStart");
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onResult");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            Log.e(TAG, "分享"+"onError");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.e(TAG, "分享"+"onCancel");
         }
     };
 
@@ -226,12 +297,12 @@ public class WebViewActivity extends AppCompatActivity {
         dialog.setOnItemClickListener(new ExamineMoreDialog.onItemClickListener() {
             @Override
             public void onTakePhotos() {
-                jsListener.onMakePhoto();
+                onMakePhoto();
             }
 
             @Override
             public void onPhotoAlbum() {
-                jsListener.onPickPhoto();
+                onPickPhoto();
             }
         });
         dialog.show();

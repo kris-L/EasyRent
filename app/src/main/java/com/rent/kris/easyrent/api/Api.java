@@ -34,6 +34,11 @@ public interface Api {
     @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Login/index.html")
     Observable<MyApiResponse<UserProfile>> login(@Body Map<String, String> params);
 
+    /**
+     * 第三方登录
+     */
+    @POST(Constant.BASE_URL +"appa/app2/public/index.php/mobile/Connect/wqwregister")
+    Observable<MyApiResponse<UserProfile>> wqwregister(@Body Map<String, String> params);
 
     /**
      * 注册

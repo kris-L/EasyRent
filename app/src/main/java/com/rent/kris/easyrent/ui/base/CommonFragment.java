@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.MyApplication;
 import com.rent.kris.easyrent.R;
+import com.rent.kris.easyrent.event.GpsNotify;
 import com.rent.kris.easyrent.event.UploadSuccessEvent;
 import com.rent.kris.easyrent.prefs.UserProfilePrefs;
-import com.rent.kris.easyrent.util.JSBridge;
+import com.rent.kris.easyrent.ui.MainActivity;
+import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.web.WebViewSettings;
 import com.xw.common.prefs.LoginInfoPrefs;
 
@@ -39,6 +42,8 @@ import butterknife.Unbinder;
  * Created by lsz  on 2019-02-14
  */
 public class CommonFragment extends Fragment {
+
+    private static String TAG = "CommonFragment";
 
     private Unbinder unbinder;
     private String mTitle = "";
@@ -74,6 +79,10 @@ public class CommonFragment extends Fragment {
         if (args != null) {
             urlStr = args.getString("url");
             mTitle = args.getString("title");
+        }
+        //设置可调试
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
         }
 
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
@@ -120,7 +129,7 @@ public class CommonFragment extends Fragment {
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
 //        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        mWebView.addJavascriptInterface(new JSBridge(mWebView, getActivity()), "App");
+        mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, getActivity(), ((MainActivity)getActivity()).jsListener), "App");
 //        mWebView.getSettings().setBlockNetworkImage(false);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
@@ -192,6 +201,16 @@ public class CommonFragment extends Fragment {
     public void Event(UploadSuccessEvent messageEvent) {
         if(mWebView != null){
             mWebView.loadUrl("javascript:uploadSuccess()");
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(GpsNotify messageEvent) {
+        Log.e(TAG,"GpsNotify mWebView ="+mWebView);
+        if(mWebView != null){
+            String location = MainActivity.latLng.latitude+";"+MainActivity.latLng.longitude;
+            Log.e(TAG,"Event GpsNotify location ="+location);
+            mWebView.loadUrl("javascript:setGpsLocation(\""+location+"\")");
         }
     }
 

@@ -22,6 +22,11 @@ android {
         flavorDimensions "versionCode"
     }
     buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
