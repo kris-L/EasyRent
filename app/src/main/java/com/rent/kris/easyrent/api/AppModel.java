@@ -124,7 +124,7 @@ public class AppModel extends ApiModel<Api> {
                 .flatMap(new Func1<UserProfile, Observable<UserProfile>>() {
                     @Override
                     public Observable<UserProfile> call(UserProfile userProfile) {
-                        LoginHelper.onLogin("", "", userProfile);
+                        LoginHelper.onLogin(userProfile.username, "", userProfile);
                         RequestInterceptor.getInstance().setTokenValue(userProfile.key);
                         return Observable.just(userProfile);
                     }

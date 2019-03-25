@@ -128,13 +128,7 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.forget_password_tv:
-//                SetPasswordActivity.intentTo(mContext);
-                String pictureUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553427441501&di=1e1f6341c636b2f0974d48719022aee5&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201409%2F23%2F20140923094045_BNYji.thumb.700_0.png";
-                new ShareAction(LoginActivity.this).withText("hello")
-                        .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
-                        .setCallback(umShareListener)
-                        .withMedia(new UMImage(LoginActivity.this, pictureUrl))
-                        .open();
+                SetPasswordActivity.intentTo(mContext);
                 break;
         }
     }
@@ -221,15 +215,15 @@ public class LoginActivity extends BaseActivity {
 //                    RequestInterceptor.getInstance().setTokenValue("");
                     RegisterActivity.intentTo(LoginActivity.this,registerCode,uid,member_name,member_sex,member_avatar,source);
                     AppToast.makeText(LoginActivity.this, "请绑定手机号码");
-                    finish();
                 }if(student.state == 1){
                     MainActivity.intentTo(LoginActivity.this,1);
                     AppToast.makeText(LoginActivity.this, "登录成功");
+                    EventBus.getDefault().post(new LogOutEvent());
                     finish();
                 }else{
                     AppToast.makeText(LoginActivity.this, "登录失败");
                 }
-                EventBus.getDefault().post(new LogOutEvent());
+
             }
         });
     }

@@ -57,6 +57,7 @@ import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;

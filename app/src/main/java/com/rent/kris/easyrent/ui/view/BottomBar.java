@@ -67,7 +67,7 @@ public class BottomBar extends LinearLayout {
             tab_first_text_tv.setText(getResources().getText(R.string.easy_rent_str));
             tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
             tab_second_text_tv.setText(getResources().getText(R.string.easy_family_str));
-            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_message));
             tab_third_text_tv.setText(getResources().getText(R.string.easy_msg_str));
             tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
             tab_fouth_text_tv.setText(getResources().getText(R.string.easy_mine_str));
@@ -86,7 +86,7 @@ public class BottomBar extends LinearLayout {
                     tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 3:
-                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session_pre));
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_message_pre));
                     tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 4:
@@ -231,7 +231,7 @@ public class BottomBar extends LinearLayout {
             tab_first_text_tv.setText("首页");
             tab_second_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_family));
             tab_second_text_tv.setText("搜索");
-            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session));
+            tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_message));
             tab_third_text_tv.setText("唠叨");
             tab_fouth_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_mine));
             tab_fouth_text_tv.setText("文章");
@@ -250,7 +250,7 @@ public class BottomBar extends LinearLayout {
                     tab_second_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 3:
-                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_session_pre));
+                    tab_third_iv.setBackground(getResources().getDrawable(R.drawable.icon_tab_message_pre));
                     tab_third_text_tv.setTextColor(getResources().getColor(R.color.circle_orange_bg));
                     break;
                 case 4:
