@@ -95,7 +95,6 @@ public class FouthFragment extends BaseFragment {
             case R.id.my_account_ll:
                 url = Constant.BASE_URL +"appa/app2/public/wap//tmpl/member/my_account.html";
                 Utils.GotoWebView(getActivity(),url);
-
                 break;
 
             case R.id.my_contract_ll:

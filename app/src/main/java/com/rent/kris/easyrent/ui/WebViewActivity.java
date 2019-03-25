@@ -17,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.rent.kris.easyrent.BuildConfig;
 import com.rent.kris.easyrent.R;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.entity.ShareInfo;
@@ -48,6 +52,8 @@ import com.umeng.socialize.media.UMWeb;
 import com.xw.common.prefs.LoginInfoPrefs;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,6 +80,7 @@ public class WebViewActivity extends AppCompatActivity {
     private String photoFileName;
 
     private Context mContext;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +89,11 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
         mContext = this;
         initWebView();
+        EventBus.getDefault().register(this);
     }
 
-    @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     private void initWebView() {
-        TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
         tvTitle.setText(getIntent().getStringExtra("title"));
         findViewById(R.id.iv_left_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,53 +102,61 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
         mWebView = (WebView) findViewById(R.id.m_web_view);
-        mWebView.setWebViewClient(mWebViewClient);
         WebViewSettings.config(mWebView.getSettings());
+        mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, this, jsListener), "App");
+
+        mWebView.setWebViewClient(mWebViewClient);
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if (!TextUtils.isEmpty(title)) {
+                    tvTitle.setText(title);
+                }
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+
+            }
+
+            // 处理定位权限请求
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin,
+                                                           GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
+            }
+
+        });
+
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, this, jsListener), "App");
 
         String url = getIntent().getStringExtra("url");
         mWebView.loadUrl(url);
     }
 
-    WebViewClient mWebViewClient = new WebViewClient() {
-        //将约定好的空js文件替换为本地的
+    public WebViewClient mWebViewClient = new WebViewClient() {
+
         @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            WebResourceResponse webResourceResponse = super.shouldInterceptRequest(view, url);
-            if (url == null) {
-                return webResourceResponse;
-            }
-//            if (url.endsWith("native-app.js")) {
-//                try {
-//                    webResourceResponse = new WebResourceResponse("text/javascript", "UTF-8", WebViewActivity.this.getAssets().open("local.js"));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-            return webResourceResponse;
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            //6.0以下执行
         }
 
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        //处理网页加载失败时
         @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            WebResourceResponse webResourceResponse = super.shouldInterceptRequest(view, request);
-            if (request == null) {
-                return webResourceResponse;
-            }
-            String url = request.getUrl().toString();
-//            if (url != null && url.endsWith("native-app.js")) {
-//                try {
-//                    webResourceResponse = new WebResourceResponse("text/javascript", "UTF-8", WebViewActivity.this.getAssets().open("local.js"));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-            return webResourceResponse;
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            //6.0以上执行
         }
     };
+
 
     public void onPickPhoto() {
         runOnUiThread(new Runnable() {
@@ -406,5 +421,24 @@ public class WebViewActivity extends AppCompatActivity {
                 });
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(GpsNotify messageEvent) {
+        Log.e(TAG,"GpsNotify mWebView ="+mWebView);
+        if(mWebView != null){
+            String location = MainActivity.latLng.latitude+";"+MainActivity.latLng.longitude;
+            Log.e(TAG,"Event GpsNotify location ="+location);
+            mWebView.loadUrl("javascript:setGpsLocation(\""+location+"\")");
+        }
+    }
+
 
 }

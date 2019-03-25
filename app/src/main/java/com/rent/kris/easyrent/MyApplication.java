@@ -11,7 +11,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.rent.kris.easyrent.api.AppModel;
 import com.rent.kris.easyrent.constant.Constant;
 import com.rent.kris.easyrent.prefs.SPSetting;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
@@ -49,8 +48,6 @@ public class MyApplication extends MultiDexApplication {
         PlatformConfig.setSinaWeibo("2285817041", "3eccd8545d12ef94b84d527a31563f66","https://sns.whalecloud.com/sina2/callback");
         //QQ登录
         PlatformConfig.setQQZone("101559757", "98b1e4b31994a1d537bd6c91e3fbf7c6");
-
-        CrashReport.initCrashReport(getApplicationContext(), "99f98035cf", false);
 
         initImageLoader(this);
 

@@ -127,16 +127,12 @@ public class CommonFragment extends Fragment {
         settings.setDomStorageEnabled(true);  //定位的关键设置
 
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
-//        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);   //不使用缓存
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.addJavascriptInterface(new JavaAndJSBridge(mWebView, getActivity(), ((MainActivity)getActivity()).jsListener), "App");
 //        mWebView.getSettings().setBlockNetworkImage(false);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        }
-        //设置可调试
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
         }
     }
 

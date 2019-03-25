@@ -57,7 +57,6 @@ import com.rent.kris.easyrent.util.CommonUtils;
 import com.rent.kris.easyrent.util.JavaAndJSBridge;
 import com.rent.kris.easyrent.util.RealPathUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -193,6 +192,7 @@ public class MainActivity extends BaseActivity{
         String urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yizu/indexa.html";
         String title = "易租";
         firstFragment = CommonFragment.newInstance(urlStr, title);
+
 
         urlStr = Constant.BASE_URL +"appa/app2/public/wap/tmpl/yijia/index.html";
         title = "易家";
