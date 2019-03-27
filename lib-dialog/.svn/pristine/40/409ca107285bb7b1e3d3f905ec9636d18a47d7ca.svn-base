@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="common_dialog_gray_dd">#dddddd</color>
-    <color name="colorPrimary">#22ac38</color>
-    <color name="colorPrimaryDark">#187b28</color>
-    <color name="colorAccent">#1f9f34</color>
-</resources>

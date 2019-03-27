@@ -38,15 +38,7 @@ import com.rent.kris.easyrent.web.WebViewSettings;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xw.common.prefs.LoginInfoPrefs;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
-import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by lsz  on 2019-02-21

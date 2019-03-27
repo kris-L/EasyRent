@@ -24,7 +24,7 @@ dependencies {
     implementation rootProject.ext.deps.gson
     implementation rootProject.ext.deps.picasso
     implementation rootProject.ext.deps.eventbus
-    implementation rootProject.ext.deps.retrofit
+//    implementation rootProject.ext.deps.retrofit
     implementation project(':lib-dialog')
     implementation project(':lib-custom-view')
     api rootProject.ext.deps.timber

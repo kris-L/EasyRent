@@ -20,7 +20,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url 'http://118.178.228.199:8081/nexus/content/repositories/xw/' }
+//        maven { url 'http://118.178.228.199:8081/nexus/content/repositories/xw/' }
     }
 }
 
